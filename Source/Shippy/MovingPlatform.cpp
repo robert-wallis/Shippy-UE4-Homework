@@ -13,6 +13,10 @@ void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	originalLocation = GetActorLocation();
+	if (HasAuthority()) {
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
 }
 
 void AMovingPlatform::Tick(float deltaSeconds)
