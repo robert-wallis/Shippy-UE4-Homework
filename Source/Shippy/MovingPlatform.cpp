@@ -26,6 +26,7 @@ void AMovingPlatform::Tick(float deltaSeconds)
 		return;
 	auto world = GetWorld();
 	auto gameTime = world->RealTimeSeconds;
-	auto location = originalLocation + FVector(0.0f, sin(gameTime) * MoveDistance, 0.0f);
+
+	auto location = originalLocation + (TargetLocation * sin(gameTime));
 	SetActorLocation(location, false);
 }

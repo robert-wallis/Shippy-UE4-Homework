@@ -15,11 +15,11 @@ class SHIPPY_API AMovingPlatform : public AStaticMeshActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category=Platform)
-	float MoveDistance = 300.0f;
+	UPROPERTY(EditAnywhere, Category=Platform, Meta=(MakeEditWidget=true))
+	FVector TargetLocation;
 
 private:
-	FVector originalLocation = FVector();
+	FVector originalLocation;
 
 	AMovingPlatform(const FObjectInitializer& ObjectInitializer);
 	
