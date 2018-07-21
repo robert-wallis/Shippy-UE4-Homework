@@ -21,13 +21,19 @@ public:
 	UPROPERTY(EditAnywhere, Category=Platform)
 	float Speed = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category=Platform)
+	int MovingTriggerCount = 1;
+
 private:
-	FVector originalLocation;
+	FVector OriginalLocation;
+	float AliveTime = 0;
 
 	AMovingPlatform(const FObjectInitializer& ObjectInitializer);
 	
 	void BeginPlay() override;
 	
 	void Tick(float deltaSeconds) override;
+
+	void TickMovePlatform();
 
 };

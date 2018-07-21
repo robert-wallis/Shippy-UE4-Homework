@@ -21,15 +21,28 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* TriggeringVolume;
 
+	UPROPERTY(VisibleAnywhere)
+	int TriggerCount;
+
+	UPROPERTY(EditAnywhere)
+	TArray<class AMovingPlatform*> Platforms;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void ActivateTrigger();
+
+	UFUNCTION()
+	void DeactivateTrigger();
+
+private:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
