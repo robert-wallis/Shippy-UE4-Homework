@@ -22,9 +22,23 @@ void UShippyGameInstance::Init()
 	UE_LOG(LogTemp, Warning, TEXT("shippy init"));
 }
 
+void UShippyGameInstance::MainMenu()
+{
+	if (MainMenuClass == nullptr)
+		return;
+
+	auto menuWidget = CreateWidget<UUserWidget>(this, MainMenuClass);
+	menuWidget->AddToViewport();
+
+	auto pc = GetFirstLocalPlayerController();
+	if (pc != nullptr)
+	{
+		pc->bShowMouseCursor = true;
+	}
+}
+
 void UShippyGameInstance::Host()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Host Called"));
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
