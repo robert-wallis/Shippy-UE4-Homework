@@ -13,7 +13,7 @@ void UShippyGameInstance::Init()
 void UShippyGameInstance::Host()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Host Called"));
-	GetWorld()->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
 void UShippyGameInstance::Join(const FString& Address)
