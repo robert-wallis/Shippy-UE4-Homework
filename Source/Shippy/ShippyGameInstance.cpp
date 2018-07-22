@@ -1,9 +1,21 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved.
 
 #include "ShippyGameInstance.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "GameFramework/PlayerController.h"
+#include "PlatformTrigger.h"
+#include "Blueprint/UserWidget.h"
+
+UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/WBP_MainMenu"));
+	if (MainMenuBPClass.Class != NULL)
+	{
+		MainMenuClass = MainMenuBPClass.Class;
+	}
+}
 
 void UShippyGameInstance::Init()
 {

@@ -13,6 +13,14 @@ UCLASS()
 class SHIPPY_API UShippyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
+private:
+
+	TSubclassOf<class UUserWidget> MainMenuClass;
+
+public:
+
+	UShippyGameInstance(const FObjectInitializer &ObjectInitializer);
 	
 	virtual void Init() override;
 
@@ -21,5 +29,6 @@ class SHIPPY_API UShippyGameInstance : public UGameInstance
 
 	UFUNCTION(Exec)
 	void Join(const FString& Address);
+
 	
 };
