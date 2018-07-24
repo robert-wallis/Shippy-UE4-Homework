@@ -5,8 +5,9 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "GameFramework/PlayerController.h"
-#include "PlatformTrigger.h"
 #include "Blueprint/UserWidget.h"
+#include "PlatformTrigger.h"
+#include "MainMenuWidget.h"
 
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
 {
@@ -19,7 +20,6 @@ UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitial
 
 void UShippyGameInstance::Init()
 {
-	UE_LOG(LogTemp, Warning, TEXT("shippy init"));
 }
 
 void UShippyGameInstance::MainMenu()
@@ -28,27 +28,37 @@ void UShippyGameInstance::MainMenu()
 		return;
 
 	auto menuWidget = CreateWidget<UUserWidget>(this, MainMenuClass);
+	if (menuWidget == nullptr)
+		return;
 	menuWidget->AddToViewport();
 
-	auto pc = GetFirstLocalPlayerController();
-	if (pc != nullptr)
-	{
-		pc->bShowMouseCursor = true;
-	}
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr)
+		return;
+
+	playerController->bShowMouseCursor = true;
+
+	auto joinAddressWidget = menuWidget->GetWidgetFromName(FName("JoinAddressEdit"));
+	if (joinAddressWidget == nullptr)
+		return;
+
+	UE_LOG(LogTemp, Warning, TEXT("setting focus to join address"));
+	joinAddressWidget->SetUserFocus(playerController);
+	joinAddressWidget->SetKeyboardFocus();
 }
 
 void UShippyGameInstance::Host()
 {
+	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::Blue, TEXT("Hosting"));
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
 void UShippyGameInstance::Join(const FString& Address)
 {
-	auto pc = GetFirstLocalPlayerController();
-	if (pc != nullptr) {
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController != nullptr) {
 		auto message = FString::Printf(TEXT("Join %s"), *Address);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *message);
 		GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::Blue, *message);
-		pc->ClientTravel(Address, ::TRAVEL_Absolute);
+		playerController->ClientTravel(Address, ::TRAVEL_Absolute);
 	}
 }
