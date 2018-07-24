@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MainMenuInterface.h"
 #include "ShippyGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHIPPY_API UShippyGameInstance : public UGameInstance
+class SHIPPY_API UShippyGameInstance : public UGameInstance, public IMainMenuInterface
 {
 	GENERATED_BODY()
 
@@ -27,11 +28,10 @@ public:
 	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
 	void MainMenu();
 
-	UFUNCTION(Exec)
-	void Host();
+	UFUNCTION()
+	void MainMenuHost();
 
-	UFUNCTION(Exec)
-	void Join(const FString& Address);
+	UFUNCTION()
+	void MainMenuJoinGame(const FString& Address);
 
-	
 };

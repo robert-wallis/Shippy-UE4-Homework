@@ -6,6 +6,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
+
 #include "PlatformTrigger.h"
 #include "MainMenuWidget.h"
 
@@ -27,10 +28,15 @@ void UShippyGameInstance::MainMenu()
 	if (MainMenuClass == nullptr)
 		return;
 
-	auto menuWidget = CreateWidget<UUserWidget>(this, MainMenuClass);
+	auto menuWidget = CreateWidget<UMainMenuWidget>(this, MainMenuClass);
 	if (menuWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MainMenu is _not_ a UMainMenuWidget"));
 		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("MainMenu is a UMainMenuWidget"));
 	menuWidget->AddToViewport();
+	menuWidget->SetMenuInterface(this);
 
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)
@@ -42,18 +48,17 @@ void UShippyGameInstance::MainMenu()
 	if (joinAddressWidget == nullptr)
 		return;
 
-	UE_LOG(LogTemp, Warning, TEXT("setting focus to join address"));
 	joinAddressWidget->SetUserFocus(playerController);
 	joinAddressWidget->SetKeyboardFocus();
 }
 
-void UShippyGameInstance::Host()
+void UShippyGameInstance::MainMenuHost()
 {
 	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::Blue, TEXT("Hosting"));
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
-void UShippyGameInstance::Join(const FString& Address)
+void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 {
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController != nullptr) {
