@@ -6,11 +6,15 @@
 
 bool UMainMenuWidget::Initialize()
 {
+	if (!Super::Initialize())
+		return false; // This is "super" important, CreateWidget<UMainMenuWidget>() will fail if this doesn't return false here.
+
+
 	if (HostButton == nullptr)
 		return false;
 	if (JoinButton == nullptr)
 		return false;
-	//if (JoinAddressEdit == nullptr)
+	//if (AddressTextBox == nullptr)
 	//	return false;
 
 	HostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostClicked);
@@ -41,11 +45,11 @@ void UMainMenuWidget::OnJoinClicked()
 		return;
 	}
 
-	//if (JoinAddressEdit == nullptr) {
-	//	UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() JoinAddressEdit is null"));
+	//if (AddressTextBox == nullptr) {
+	//	UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() AddressTextBox is null"));
 	//	return;
 	//}
 
-	//auto address = JoinAddressEdit->Text.ToString();
+	//auto address = AddressTextBox->Text.ToString();
 	//MenuInterface->MainMenuJoinGame(address);
 }

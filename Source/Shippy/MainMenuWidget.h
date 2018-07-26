@@ -8,7 +8,7 @@
 #include "MainMenuWidget.generated.h"
 
 /**
- * 
+ * Bindings for the Main Menu blueprint widget.
  */
 UCLASS()
 class SHIPPY_API UMainMenuWidget : public UUserWidget
@@ -29,7 +29,7 @@ public:
 	class UButton* JoinButton;
 
 	//UPROPERTY(meta = (BindWidget))
-	//class UEditableTextBox* JoinAddressEdit;
+	//class UEditableTextBox* AddressTextBox;
 
 	void SetMenuInterface(IMainMenuInterface* mainMenuInterface);
 

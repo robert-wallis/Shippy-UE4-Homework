@@ -44,7 +44,7 @@ void UShippyGameInstance::MainMenu()
 
 	playerController->bShowMouseCursor = true;
 
-	auto joinAddressWidget = menuWidget->GetWidgetFromName(FName("JoinAddressEdit"));
+	auto joinAddressWidget = menuWidget->GetWidgetFromName(FName("Address"));
 	if (joinAddressWidget == nullptr)
 		return;
 
