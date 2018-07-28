@@ -3,6 +3,7 @@
 #include "MainMenuWidget.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
+#include "Components/WidgetSwitcher.h"
 
 bool UMainMenuWidget::Initialize()
 {
@@ -14,11 +15,13 @@ bool UMainMenuWidget::Initialize()
 		return false;
 	if (JoinButton == nullptr)
 		return false;
-	//if (AddressTextBox == nullptr)
-	//	return false;
+	if (Switcher == nullptr)
+		return false;
 
 	HostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostClicked);
 	JoinButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnJoinClicked);
+	CreditsButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreditsClicked);
+	CreditsBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackToMainMenu);
 	return true;
 }
 
@@ -45,11 +48,36 @@ void UMainMenuWidget::OnJoinClicked()
 		return;
 	}
 
-	//if (AddressTextBox == nullptr) {
-	//	UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() AddressTextBox is null"));
-	//	return;
-	//}
+	if (AddressTextBox == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() AddressTextBox is null"));
+		return;
+	}
 
-	//auto address = AddressTextBox->Text.ToString();
-	//MenuInterface->MainMenuJoinGame(address);
+	auto address = AddressTextBox->Text.ToString();
+
+	if (address.Len() <= 0) {
+		return;
+	}
+
+	MenuInterface->MainMenuJoinGame(address);
+}
+
+void UMainMenuWidget::OnBackToMainMenu()
+{
+	if (MainMenu == nullptr)
+		return;
+	if (Switcher == nullptr)
+		return;
+
+	Switcher->SetActiveWidget(MainMenu);
+}
+
+void UMainMenuWidget::OnCreditsClicked()
+{
+	if (CreditsMenu == nullptr)
+		return;
+	if (Switcher == nullptr)
+		return;
+
+	Switcher->SetActiveWidget(CreditsMenu);
 }

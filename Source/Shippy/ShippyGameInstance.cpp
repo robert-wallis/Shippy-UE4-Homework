@@ -54,7 +54,7 @@ void UShippyGameInstance::MainMenu()
 
 void UShippyGameInstance::MainMenuHost()
 {
-	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::Blue, TEXT("Hosting"));
+	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, TEXT("Hosting"));
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
@@ -62,8 +62,8 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 {
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController != nullptr) {
-		auto message = FString::Printf(TEXT("Join %s"), *Address);
-		GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::Blue, *message);
-		playerController->ClientTravel(Address, ::TRAVEL_Absolute);
+		auto message = FString::Printf(TEXT("Joining %s"), *Address);
+		GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, *message);
+		playerController->ClientTravel(Address, ::TRAVEL_Relative);
 	}
 }
