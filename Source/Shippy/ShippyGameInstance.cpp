@@ -7,16 +7,16 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 
-#include "PlatformTrigger.h"
 #include "MainMenuWidget.h"
+#include "InGameMenu.h"
 
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/WBP_MainMenu"));
-	if (MainMenuBPClass.Class != NULL)
-	{
-		MainMenuClass = MainMenuBPClass.Class;
-	}
+	MainMenuClass = MainMenuBPClass.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/Menu/InGameMenu_WBP"));
+	InGameMenuClass = InGameMenuBPClass.Class;
 }
 
 void UShippyGameInstance::Init()
@@ -34,22 +34,14 @@ void UShippyGameInstance::MainMenu()
 		UE_LOG(LogTemp, Warning, TEXT("MainMenu is _not_ a UMainMenuWidget"));
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("MainMenu is a UMainMenuWidget"));
 	menuWidget->AddToViewport();
 	menuWidget->SetMenuInterface(this);
 
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)
 		return;
-
-	playerController->bShowMouseCursor = true;
-
-	auto joinAddressWidget = menuWidget->GetWidgetFromName(FName("Address"));
-	if (joinAddressWidget == nullptr)
-		return;
-
-	joinAddressWidget->SetUserFocus(playerController);
-	joinAddressWidget->SetKeyboardFocus();
+	EnableMouseControl(*playerController);
+	FocusOnWidget(*menuWidget, *playerController, FName("HostButton"));
 }
 
 void UShippyGameInstance::MainMenuHost()
@@ -66,4 +58,56 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 		GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, *message);
 		playerController->ClientTravel(Address, ::TRAVEL_Relative);
 	}
+}
+
+void UShippyGameInstance::InGameMenu()
+{
+	if (InGameMenuClass == nullptr)
+		return;
+
+	auto menuWidget = CreateWidget<UInGameMenu>(this, InGameMenuClass);
+	if (menuWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InGameMenu is _not_ a UInGameMenu"));
+		return;
+	}
+	menuWidget->AddToViewport();
+	menuWidget->SetInterface(this);
+	CurrentInGameMenu = menuWidget;
+
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr)
+		return;
+	EnableMouseControl(*playerController);
+	FocusOnWidget(*menuWidget, *playerController, FName("CancelButton"));
+}
+
+void UShippyGameInstance::InGameMenuExitToMainMenu()
+{
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr)
+		return;
+	playerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
+}
+
+void UShippyGameInstance::InGameMenuCancel()
+{
+	if (CurrentInGameMenu == nullptr)
+		return;
+	CurrentInGameMenu->RemoveFromViewport();
+}
+
+void UShippyGameInstance::EnableMouseControl(APlayerController& playerController)
+{
+	playerController.bShowMouseCursor = true;
+}
+
+void UShippyGameInstance::FocusOnWidget(UUserWidget& menuWidget, APlayerController& playerController, const FName& name)
+{
+	auto defaultWidget = menuWidget.GetWidgetFromName(name);
+	if (defaultWidget == nullptr)
+		return;
+
+	defaultWidget->SetUserFocus(&playerController);
+	defaultWidget->SetKeyboardFocus();
 }

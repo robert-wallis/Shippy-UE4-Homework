@@ -5,19 +5,25 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MainMenuInterface.h"
+#include "InGameMenuInterface.h"
 #include "ShippyGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHIPPY_API UShippyGameInstance : public UGameInstance, public IMainMenuInterface
+class SHIPPY_API UShippyGameInstance : 
+	public UGameInstance,
+	public IMainMenuInterface,
+	public IInGameMenuInterface
 {
 	GENERATED_BODY()
 
 private:
 
 	TSubclassOf<class UUserWidget> MainMenuClass;
+	TSubclassOf<class UUserWidget> InGameMenuClass;
+	class UUserWidget* CurrentInGameMenu;
 
 public:
 
@@ -28,10 +34,26 @@ public:
 	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
 	void MainMenu();
 
-	UFUNCTION()
-	void MainMenuHost();
+
+	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
+	void InGameMenu();
+
+private:
 
 	UFUNCTION()
-	void MainMenuJoinGame(const FString& Address);
+	void MainMenuHost() override;
+
+	UFUNCTION()
+	void MainMenuJoinGame(const FString& Address) override;
+
+	UFUNCTION()
+	void InGameMenuExitToMainMenu() override;
+
+	UFUNCTION()
+	void InGameMenuCancel() override;
+
+	void EnableMouseControl(class APlayerController& playerController);
+
+	void FocusOnWidget(class UUserWidget& menuWidget, class APlayerController& playerController, const FName& Widget);
 
 };

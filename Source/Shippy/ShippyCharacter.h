@@ -40,6 +40,9 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
+	/** Show the InGameMenu */
+	void InGameMenu();
+
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
