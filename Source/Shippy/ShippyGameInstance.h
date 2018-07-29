@@ -23,7 +23,12 @@ private:
 
 	TSubclassOf<class UUserWidget> MainMenuClass;
 	TSubclassOf<class UUserWidget> InGameMenuClass;
-	class UUserWidget* CurrentInGameMenu;
+
+	UPROPERTY()
+	class UMainMenuWidget* MainMenuWidget;
+
+	UPROPERTY()
+	class UInGameMenu* InGameMenuWidget;
 
 public:
 
@@ -33,7 +38,6 @@ public:
 
 	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
 	void MainMenu();
-
 
 	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
 	void InGameMenu();

@@ -9,6 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ShippyGameInstance.h"
+#include "InGamemenuInterface.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AShippyCharacter
@@ -49,6 +50,7 @@ AShippyCharacter::AShippyCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -78,7 +80,7 @@ void AShippyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AShippyCharacter::OnResetVR);
 
 	// Menu system
-	PlayerInputComponent->BindAction("Menu", IE_Released, this, &AShippyCharacter::InGameMenu);
+	PlayerInputComponent->BindAction("Menu", IE_Released, this, &AShippyCharacter::OnMenu);
 }
 
 
@@ -138,7 +140,7 @@ void AShippyCharacter::MoveRight(float Value)
 	}
 }
 
-void AShippyCharacter::InGameMenu()
+void AShippyCharacter::OnMenu()
 {
 	auto gameInstance = GetGameInstance();
 	if (gameInstance == nullptr)

@@ -15,7 +15,6 @@ class SHIPPY_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-
 	IMainMenuInterface* MenuInterface;
 
 public:

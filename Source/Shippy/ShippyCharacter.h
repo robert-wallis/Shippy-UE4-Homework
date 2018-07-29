@@ -18,6 +18,8 @@ class AShippyCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+
 public:
 	AShippyCharacter();
 
@@ -28,6 +30,7 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
 
 protected:
 
@@ -41,7 +44,7 @@ protected:
 	void MoveRight(float Value);
 
 	/** Show the InGameMenu */
-	void InGameMenu();
+	void OnMenu();
 
 	/** 
 	 * Called via input to turn at a given rate. 
