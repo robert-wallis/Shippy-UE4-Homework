@@ -10,12 +10,21 @@ bool UMainMenuWidget::Initialize()
 	if (!Super::Initialize())
 		return false; // This is "super" important, CreateWidget<UMainMenuWidget>() will fail if this doesn't return false here.
 
-
 	if (HostButton == nullptr)
 		return false;
 	if (JoinButton == nullptr)
 		return false;
+	if (AddressTextBox == nullptr)
+		return false;
 	if (Switcher == nullptr)
+		return false;
+	if (MainMenu == nullptr)
+		return false;
+	if (CreditsMenu == nullptr)
+		return false;
+	if (CreditsButton == nullptr)
+		return false;
+	if (CreditsBackButton == nullptr)
 		return false;
 
 	HostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostClicked);
