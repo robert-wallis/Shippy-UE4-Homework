@@ -7,7 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 
-#include "MainMenuWidget.h"
+#include "MainMenu.h"
 #include "InGameMenu.h"
 
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
@@ -22,10 +22,10 @@ UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitial
 
 void UShippyGameInstance::Init()
 {
-	MainMenuWidget = CreateWidget<UMainMenuWidget>(this, MainMenuClass);
+	MainMenuWidget = CreateWidget<UMainMenu>(this, MainMenuClass);
 	if (MainMenuWidget == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MainMenu is _not_ a UMainMenuWidget"));
+		UE_LOG(LogTemp, Warning, TEXT("MainMenu is _not_ a UMainMenu"));
 		return;
 	}
 	MainMenuWidget->SetMenuInterface(this);
@@ -45,9 +45,6 @@ void UShippyGameInstance::MainMenu()
 		return;
 
 	MainMenuWidget->AddToViewport();
-
-	if (GEngine == nullptr)
-		return;
 
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)
@@ -84,9 +81,6 @@ void UShippyGameInstance::InGameMenu()
 		return;
 
 	InGameMenuWidget->AddToViewport();
-
-	if (GEngine == nullptr)
-		return;
 
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)

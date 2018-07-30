@@ -1,14 +1,14 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved.
 
-#include "MainMenuWidget.h"
+#include "MainMenu.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/WidgetSwitcher.h"
 
-bool UMainMenuWidget::Initialize()
+bool UMainMenu::Initialize()
 {
 	if (!Super::Initialize())
-		return false; // This is "super" important, CreateWidget<UMainMenuWidget>() will fail if this doesn't return false here.
+		return false; // This is "super" important, CreateWidget<UMainMenu>() will fail if this doesn't return false here.
 
 	if (HostButton == nullptr)
 		return false;
@@ -27,38 +27,38 @@ bool UMainMenuWidget::Initialize()
 	if (CreditsBackButton == nullptr)
 		return false;
 
-	HostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostClicked);
-	JoinButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnJoinClicked);
-	CreditsButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreditsClicked);
-	CreditsBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackToMainMenu);
+	HostButton->OnClicked.AddDynamic(this, &UMainMenu::OnHostClicked);
+	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OnJoinClicked);
+	CreditsButton->OnClicked.AddDynamic(this, &UMainMenu::OnCreditsClicked);
+	CreditsBackButton->OnClicked.AddDynamic(this, &UMainMenu::OnBackToMainMenu);
 	return true;
 }
 
-void UMainMenuWidget::SetMenuInterface(IMainMenuInterface * mainMenuInterface)
+void UMainMenu::SetMenuInterface(IMainMenuInterface * mainMenuInterface)
 {
 	MenuInterface = mainMenuInterface;
 }
 
-void UMainMenuWidget::OnHostClicked()
+void UMainMenu::OnHostClicked()
 {
 	if (MenuInterface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnHostClicked() MenuInterface is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() MenuInterface is null"));
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnHostClicked() Host command sent"));
+	UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() Host command sent"));
 
 	MenuInterface->MainMenuHost();
 }
 
-void UMainMenuWidget::OnJoinClicked()
+void UMainMenu::OnJoinClicked()
 {
 	if (MenuInterface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() MenuInterface is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() MenuInterface is null"));
 		return;
 	}
 
 	if (AddressTextBox == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenuWidget::OnJoinClicked() AddressTextBox is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() AddressTextBox is null"));
 		return;
 	}
 
@@ -71,7 +71,7 @@ void UMainMenuWidget::OnJoinClicked()
 	MenuInterface->MainMenuJoinGame(address);
 }
 
-void UMainMenuWidget::OnBackToMainMenu()
+void UMainMenu::OnBackToMainMenu()
 {
 	if (MainMenu == nullptr)
 		return;
@@ -81,7 +81,7 @@ void UMainMenuWidget::OnBackToMainMenu()
 	Switcher->SetActiveWidget(MainMenu);
 }
 
-void UMainMenuWidget::OnCreditsClicked()
+void UMainMenu::OnCreditsClicked()
 {
 	if (CreditsMenu == nullptr)
 		return;

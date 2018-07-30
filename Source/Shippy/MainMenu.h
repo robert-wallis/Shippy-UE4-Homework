@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MainMenuInterface.h"
-#include "MainMenuWidget.generated.h"
+#include "MainMenu.generated.h"
 
 /**
  * Bindings for the Main Menu blueprint widget.
  */
 UCLASS()
-class SHIPPY_API UMainMenuWidget : public UUserWidget
+class SHIPPY_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
