@@ -25,7 +25,7 @@ private:
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
 	UPROPERTY()
-	class UMainMenuWidget* MainMenuWidget;
+	class UMainMenu* MainMenuWidget;
 
 	UPROPERTY()
 	class UInGameMenu* InGameMenuWidget;
