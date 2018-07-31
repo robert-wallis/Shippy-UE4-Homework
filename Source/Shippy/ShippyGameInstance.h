@@ -34,7 +34,7 @@ public:
 
 	UShippyGameInstance(const FObjectInitializer &ObjectInitializer);
 	
-	virtual void Init() override;
+	void Init() override;
 
 	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
 	void MainMenu();
@@ -49,6 +49,9 @@ private:
 
 	UFUNCTION()
 	void MainMenuJoinGame(const FString& Address) override;
+
+	UFUNCTION()
+	void MainMenuQuit() override;
 
 	UFUNCTION()
 	void InGameMenuExitToMainMenu() override;

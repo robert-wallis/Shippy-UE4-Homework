@@ -34,6 +34,9 @@ public:
 	class UButton* CreditsButton;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* QuitButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class UButton* CreditsBackButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -55,6 +58,9 @@ private:
 
 	UFUNCTION()
 	void OnJoinClicked();
+
+	UFUNCTION()
+	void OnQuitClicked();
 
 	UFUNCTION()
 	void OnBackToMainMenu();

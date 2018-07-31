@@ -16,6 +16,8 @@ bool UMainMenu::Initialize()
 		return false;
 	if (AddressTextBox == nullptr)
 		return false;
+	if (QuitButton == nullptr)
+		return false;
 	if (Switcher == nullptr)
 		return false;
 	if (MainMenu == nullptr)
@@ -30,6 +32,7 @@ bool UMainMenu::Initialize()
 	HostButton->OnClicked.AddDynamic(this, &UMainMenu::OnHostClicked);
 	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OnJoinClicked);
 	CreditsButton->OnClicked.AddDynamic(this, &UMainMenu::OnCreditsClicked);
+	QuitButton->OnClicked.AddDynamic(this, &UMainMenu::OnQuitClicked);
 	CreditsBackButton->OnClicked.AddDynamic(this, &UMainMenu::OnBackToMainMenu);
 	return true;
 }
@@ -42,10 +45,9 @@ void UMainMenu::SetInterface(MainMenuInterface * Interface)
 void UMainMenu::OnHostClicked()
 {
 	if (Interface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() MenuInterface is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() MainMenuInterface is null"));
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() Host command sent"));
 
 	Interface->MainMenuHost();
 }
@@ -53,14 +55,12 @@ void UMainMenu::OnHostClicked()
 void UMainMenu::OnJoinClicked()
 {
 	if (Interface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() MenuInterface is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() MainMenuInterface is null"));
 		return;
 	}
 
-	if (AddressTextBox == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() AddressTextBox is null"));
+	if (AddressTextBox == nullptr)
 		return;
-	}
 
 	auto address = AddressTextBox->Text.ToString();
 
@@ -69,6 +69,24 @@ void UMainMenu::OnJoinClicked()
 	}
 
 	Interface->MainMenuJoinGame(address);
+}
+
+void UMainMenu::OnCreditsClicked()
+{
+	if (CreditsMenu == nullptr)
+		return;
+	if (Switcher == nullptr)
+		return;
+
+	Switcher->SetActiveWidget(CreditsMenu);
+}
+
+void UMainMenu::OnQuitClicked()
+{
+	if (Interface == nullptr)
+		return;
+
+	Interface->MainMenuQuit();
 }
 
 void UMainMenu::OnBackToMainMenu()
@@ -81,12 +99,3 @@ void UMainMenu::OnBackToMainMenu()
 	Switcher->SetActiveWidget(MainMenu);
 }
 
-void UMainMenu::OnCreditsClicked()
-{
-	if (CreditsMenu == nullptr)
-		return;
-	if (Switcher == nullptr)
-		return;
-
-	Switcher->SetActiveWidget(CreditsMenu);
-}

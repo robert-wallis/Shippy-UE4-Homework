@@ -72,6 +72,12 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 	}
 }
 
+void UShippyGameInstance::MainMenuQuit()
+{
+	ClientMessage("MainMenu Quit");
+	GEngine->Exec(GetWorld(), TEXT("QUIT"), *GLog);
+}
+
 void UShippyGameInstance::InGameMenu()
 {
 	if (InGameMenuClass == nullptr)
