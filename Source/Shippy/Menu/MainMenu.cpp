@@ -34,25 +34,25 @@ bool UMainMenu::Initialize()
 	return true;
 }
 
-void UMainMenu::SetMenuInterface(IMainMenuInterface * mainMenuInterface)
+void UMainMenu::SetInterface(MainMenuInterface * Interface)
 {
-	MenuInterface = mainMenuInterface;
+	this->Interface = Interface;
 }
 
 void UMainMenu::OnHostClicked()
 {
-	if (MenuInterface == nullptr) {
+	if (Interface == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() MenuInterface is null"));
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() Host command sent"));
 
-	MenuInterface->MainMenuHost();
+	Interface->MainMenuHost();
 }
 
 void UMainMenu::OnJoinClicked()
 {
-	if (MenuInterface == nullptr) {
+	if (Interface == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() MenuInterface is null"));
 		return;
 	}
@@ -68,7 +68,7 @@ void UMainMenu::OnJoinClicked()
 		return;
 	}
 
-	MenuInterface->MainMenuJoinGame(address);
+	Interface->MainMenuJoinGame(address);
 }
 
 void UMainMenu::OnBackToMainMenu()

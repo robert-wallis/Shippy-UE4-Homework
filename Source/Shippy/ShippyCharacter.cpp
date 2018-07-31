@@ -9,7 +9,6 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ShippyGameInstance.h"
-#include "InGamemenuInterface.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AShippyCharacter

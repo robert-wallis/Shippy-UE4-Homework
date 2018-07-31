@@ -19,23 +19,23 @@ bool UInGameMenu::Initialize()
 	return true;
 }
 
-void UInGameMenu::SetInterface(IInGameMenuInterface * Interface)
+void UInGameMenu::SetInterface(InGameMenuInterface* Interface)
 {
-	InGameMenuInterface = Interface;
+	this->Interface = Interface;
 }
 
 void UInGameMenu::OnExitToMainMenuClicked()
 {
-	if (InGameMenuInterface == nullptr)
+	if (Interface == nullptr)
 		return;
 
-	InGameMenuInterface->InGameMenuExitToMainMenu();
+	Interface->InGameMenuExitToMainMenu();
 }
 
 void UInGameMenu::OnCancelClicked()
 {
-	if (InGameMenuInterface == nullptr)
+	if (Interface == nullptr)
 		return;
 
-	InGameMenuInterface->InGameMenuCancel();
+	Interface->InGameMenuCancel();
 }

@@ -15,7 +15,7 @@ class SHIPPY_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
-	IMainMenuInterface* MenuInterface;
+	MainMenuInterface* Interface;
 
 public:
 
@@ -45,7 +45,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UWidget* CreditsMenu;
 
-	void SetMenuInterface(IMainMenuInterface* mainMenuInterface);
+	void SetInterface(MainMenuInterface* Interface);
 
 
 private:
@@ -63,3 +63,4 @@ private:
 	void OnCreditsClicked();
 
 };
+

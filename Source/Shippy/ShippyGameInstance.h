@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "MainMenuInterface.h"
-#include "InGameMenuInterface.h"
+#include "Menu/MainMenu.h"
+#include "Menu/InGameMenu.h"
 #include "ShippyGameInstance.generated.h"
 
 /**
@@ -14,8 +14,8 @@
 UCLASS()
 class SHIPPY_API UShippyGameInstance : 
 	public UGameInstance,
-	public IMainMenuInterface,
-	public IInGameMenuInterface
+	public MainMenuInterface,
+	public InGameMenuInterface
 {
 	GENERATED_BODY()
 

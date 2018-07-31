@@ -8,16 +8,16 @@
 #include "InGameMenu.generated.h"
 
 /**
- * 
+ * Main Menu that shows while playing the game.
  */
 UCLASS()
 class SHIPPY_API UInGameMenu : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 private:
 
-	IInGameMenuInterface* InGameMenuInterface;
+	InGameMenuInterface* Interface;
 
 public:
 
@@ -29,8 +29,8 @@ public:
 
 	bool Initialize() override;
 
-	void SetInterface(IInGameMenuInterface* Interface);
-	
+	void SetInterface(InGameMenuInterface* Interface);
+
 private:
 
 	UFUNCTION()

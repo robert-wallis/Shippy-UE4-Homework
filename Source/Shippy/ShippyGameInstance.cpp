@@ -7,9 +7,6 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 
-#include "MainMenu.h"
-#include "InGameMenu.h"
-
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/MainMenu_WBP"));
@@ -28,7 +25,7 @@ void UShippyGameInstance::Init()
 		UE_LOG(LogTemp, Warning, TEXT("MainMenu is _not_ a UMainMenu"));
 		return;
 	}
-	MainMenuWidget->SetMenuInterface(this);
+	MainMenuWidget->SetInterface(this);
 
 	InGameMenuWidget = CreateWidget<UInGameMenu>(this, InGameMenuClass);
 	if (InGameMenuWidget == nullptr)
@@ -66,7 +63,7 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 		return;
 	}
 
-	auto message = FString::Printf(TEXT("Joining %s"), *Address);
+	const auto message = FString::Printf(TEXT("Joining %s"), *Address);
 	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, *message);
 	playerController->ClientTravel(Address, ::TRAVEL_Relative);
 
@@ -82,7 +79,7 @@ void UShippyGameInstance::InGameMenu()
 
 	InGameMenuWidget->AddToViewport();
 
-	auto playerController = GetFirstLocalPlayerController();
+	const auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)
 		return;
 	EnableMouseControl(*playerController);
