@@ -60,4 +60,6 @@ private:
 
 	void FocusOnWidget(class UUserWidget& menuWidget, class APlayerController& playerController, const FName& Widget);
 
+	void ClientMessage(const FString& message);
+
 };

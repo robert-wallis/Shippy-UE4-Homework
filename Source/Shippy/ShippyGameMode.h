@@ -14,6 +14,3 @@ class AShippyGameMode : public AGameModeBase
 public:
 	AShippyGameMode();
 };
-
-
-

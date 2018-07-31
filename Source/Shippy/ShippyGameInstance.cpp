@@ -52,7 +52,7 @@ void UShippyGameInstance::MainMenu()
 
 void UShippyGameInstance::MainMenuHost()
 {
-	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, TEXT("Hosting"));
+	ClientMessage("Hosting Game");
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
@@ -64,7 +64,7 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 	}
 
 	const auto message = FString::Printf(TEXT("Joining %s"), *Address);
-	GetEngine()->AddOnScreenDebugMessage(0, 3.0f, FColor::White, *message);
+	ClientMessage(message);
 	playerController->ClientTravel(Address, ::TRAVEL_Relative);
 
 	if (MainMenuWidget != nullptr) {
@@ -92,6 +92,7 @@ void UShippyGameInstance::InGameMenuExitToMainMenu()
 	if (playerController == nullptr)
 		return;
 	InGameMenuWidget->RemoveFromViewport();
+	ClientMessage("Left Game");
 	playerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
 }
 
@@ -115,4 +116,13 @@ void UShippyGameInstance::FocusOnWidget(UUserWidget& menuWidget, APlayerControll
 
 	defaultWidget->SetUserFocus(&playerController);
 	defaultWidget->SetKeyboardFocus();
+}
+
+void UShippyGameInstance::ClientMessage(const FString & message)
+{
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController != nullptr)
+	{
+		playerController->ClientMessage(message);
+	}
 }
