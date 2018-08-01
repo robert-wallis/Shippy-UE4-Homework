@@ -75,7 +75,7 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 void UShippyGameInstance::MainMenuQuit()
 {
 	ClientMessage("MainMenu Quit");
-	GEngine->Exec(GetWorld(), TEXT("QUIT"), *GLog);
+	GetFirstGamePlayer()->ConsoleCommand("QUIT");
 }
 
 void UShippyGameInstance::InGameMenu()
