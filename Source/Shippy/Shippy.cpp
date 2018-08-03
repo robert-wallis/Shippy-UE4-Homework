@@ -3,5 +3,7 @@
 #include "Shippy.h"
 #include "Modules/ModuleManager.h"
 
+DEFINE_LOG_CATEGORY(LogShippy);
+
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Shippy, "Shippy" );
  

@@ -59,7 +59,8 @@ private:
 	UFUNCTION()
 	void InGameMenuCancel() override;
 
-	void EnableMouseControl(class APlayerController& playerController);
+	void MouseInputForMenu(class APlayerController& playerController);
+	void MouseInputForGame();
 
 	void FocusOnWidget(class UUserWidget& menuWidget, class APlayerController& playerController, const FName& Widget);
 

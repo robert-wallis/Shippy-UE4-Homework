@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/WidgetSwitcher.h"
+#include "../LogShippy.h"
 
 bool UMainMenu::Initialize()
 {
@@ -45,7 +46,7 @@ void UMainMenu::SetInterface(MainMenuInterface * Interface)
 void UMainMenu::OnHostClicked()
 {
 	if (Interface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnHostClicked() MainMenuInterface is null"));
+		UE_LOG(LogShippy, Warning, TEXT("UMainMenu::OnHostClicked() MainMenuInterface is null"));
 		return;
 	}
 
@@ -55,7 +56,7 @@ void UMainMenu::OnHostClicked()
 void UMainMenu::OnJoinClicked()
 {
 	if (Interface == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("UMainMenu::OnJoinClicked() MainMenuInterface is null"));
+		UE_LOG(LogShippy, Warning, TEXT("UMainMenu::OnJoinClicked() MainMenuInterface is null"));
 		return;
 	}
 
