@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "OnlineSubsystem.h"
+
 #include "Menu/MainMenu.h"
 #include "Menu/InGameMenu.h"
 #include "ShippyGameInstance.generated.h"
@@ -23,6 +25,8 @@ private:
 
 	TSubclassOf<class UUserWidget> MainMenuClass;
 	TSubclassOf<class UUserWidget> InGameMenuClass;
+
+	IOnlineSessionPtr OnlineSession;
 
 	UPROPERTY()
 	class UMainMenu* MainMenuWidget;
@@ -44,6 +48,9 @@ public:
 
 private:
 
+	void InitOnlineSubsystem();
+	void InitMenus();
+
 	UFUNCTION()
 	void MainMenuHost() override;
 
@@ -61,8 +68,11 @@ private:
 
 	void MouseInputForMenu(class APlayerController& playerController);
 	void MouseInputForGame();
-
 	void FocusOnWidget(class UUserWidget& menuWidget, class APlayerController& playerController, const FName& Widget);
+
+	void SessionCreate();
+	void SessionRemove(const FName& sessionName);
+	void OnSessionCreated(const FName sessionName, bool created);
 
 	void ClientMessage(const FString& message);
 
