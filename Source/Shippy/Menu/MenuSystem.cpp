@@ -14,9 +14,16 @@ UMenuSystem::UMenuSystem(const FObjectInitializer &ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/MainMenu_WBP"));
 	MainMenuClass = MainMenuBPClass.Class;
+	if (MainMenuClass == nullptr) {
+		UE_LOG(LogShippyMenu, Error, TEXT("MainMenuClass is null"));
+	}
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/Menu/InGameMenu_WBP"));
 	InGameMenuClass = InGameMenuBPClass.Class;
+	if (InGameMenuClass == nullptr) {
+		UE_LOG(LogShippyMenu, Error, TEXT("InGameMenuClass is null"));
+		return;
+	}
 }
 
 void UMenuSystem::Init(UGameInstance* gameInstance, class MainMenuInterface* mainMenuInterface, class InGameMenuInterface* inGameMenuInterface)
@@ -38,10 +45,6 @@ void UMenuSystem::Init(UGameInstance* gameInstance, class MainMenuInterface* mai
 
 void UMenuSystem::MainMenuOpen(APlayerController &playerController)
 {
-	if (MainMenuClass == nullptr) {
-		UE_LOG(LogShippyMenu, Error, TEXT("UMenuSystem::MainMenuOpen MainMenuClass is null"));
-		return;
-	}
 	UE_LOG(LogShippyMenu, Log, TEXT("MainMenuOpen"));
 
 	MainMenuWidget->AddToViewport();
@@ -63,10 +66,6 @@ void UMenuSystem::MainMenuClose(APlayerController &playerController)
 
 void UMenuSystem::InGameMenuOpen(APlayerController &playerController)
 {
-	if (InGameMenuClass == nullptr) {
-		UE_LOG(LogShippyMenu, Error, TEXT("UMenuSystem::InGameMenuOpen InGameMenuClass is null"));
-		return;
-	}
 	UE_LOG(LogShippyMenu, Log, TEXT("InGameMenuOpen"));
 
 	InGameMenuWidget->AddToViewport();
