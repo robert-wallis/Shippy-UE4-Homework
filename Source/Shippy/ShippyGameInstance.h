@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
+#include "OnlineSessionSettings.h"
 
 #include "Menu/MainMenuInterface.h"
 #include "Menu/InGameMenuInterface.h"
@@ -24,6 +25,7 @@ class SHIPPY_API UShippyGameInstance :
 private:
 
 	IOnlineSessionPtr OnlineSession;
+	TSharedPtr<FOnlineSessionSearch> OnlineSessionSearch;
 
 	UPROPERTY()
 	class UMenuSystem *MenuSystem;
@@ -62,6 +64,7 @@ private:
 	void SessionCreate();
 	void SessionRemove(const FName& sessionName);
 	void OnSessionCreated(const FName sessionName, bool created);
+	void OnSessionFindComplete(bool wasSuccessful);
 
 	void ClientMessage(const FString& message);
 

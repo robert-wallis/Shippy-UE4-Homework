@@ -41,6 +41,10 @@ void UShippyGameInstance::InitOnlineSubsystem()
 	}
 
 	OnlineSession->OnCreateSessionCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionCreated);
+	OnlineSession->OnFindSessionsCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionFindComplete);
+
+	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
+	OnlineSession->FindSessions(0, OnlineSessionSearch.ToSharedRef());
 }
 
 void UShippyGameInstance::MainMenu()
@@ -150,6 +154,14 @@ void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created
 	}
 	MenuSystem->MainMenuClose(*playerController);
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
+}
+
+void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
+{
+	UE_LOG(LogShippy, Log, TEXT("Find Session Complete"));
+	for (auto res : OnlineSessionSearch->SearchResults) {
+		UE_LOG(LogShippy, Log, TEXT("Found Session: %s"), *res.GetSessionIdStr())
+	}
 }
 
 void UShippyGameInstance::ClientMessage(const FString & message)
