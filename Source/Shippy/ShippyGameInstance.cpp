@@ -9,22 +9,19 @@
 #include "OnlineSessionInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
+
+#include "Menu/MenuSystem.h"
 #include "LogShippy.h"
 
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/MainMenu_WBP"));
-	MainMenuClass = MainMenuBPClass.Class;
-
-	static ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/Menu/InGameMenu_WBP"));
-	InGameMenuClass = InGameMenuBPClass.Class;
-
+	MenuSystem = ObjectInitializer.CreateDefaultSubobject<UMenuSystem>(this, TEXT("MenuSystem"));
 }
 
 void UShippyGameInstance::Init()
 {
 	InitOnlineSubsystem();
-	InitMenus();
+	MenuSystem->Init(this, this, this);
 }
 
 void UShippyGameInstance::InitOnlineSubsystem()
@@ -46,62 +43,33 @@ void UShippyGameInstance::InitOnlineSubsystem()
 	OnlineSession->OnCreateSessionCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionCreated);
 }
 
-void UShippyGameInstance::InitMenus()
-{
-	MainMenuWidget = CreateWidget<UMainMenu>(this, MainMenuClass);
-	if (MainMenuWidget == nullptr) {
-		UE_LOG(LogShippy, Warning, TEXT("MainMenu is _not_ a UMainMenu"));
-		return;
-	}
-	MainMenuWidget->SetInterface(this);
-
-	InGameMenuWidget = CreateWidget<UInGameMenu>(this, InGameMenuClass);
-	if (InGameMenuWidget == nullptr) {
-		UE_LOG(LogShippy, Warning, TEXT("InGameMenu is _not_ a UInGameMenu"));
-		return;
-	}
-	InGameMenuWidget->SetInterface(this);
-}
-
 void UShippyGameInstance::MainMenu()
 {
-	if (MainMenuClass == nullptr)
-		return;
-
-	MainMenuWidget->AddToViewport();
-	MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
-
 	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr)
+	if (playerController == nullptr) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::MainMenu PlayerController is null"));
 		return;
-	MouseInputForMenu(*playerController);
-	FocusOnWidget(*MainMenuWidget, *playerController, FName("HostButton"));
+	}
+	MenuSystem->MainMenuOpen(*playerController);
 }
 
 void UShippyGameInstance::MainMenuHost()
 {
 	ClientMessage("Hosting Game");
-	MainMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-	MouseInputForGame();
 	SessionCreate();
 }
 
-void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
+void UShippyGameInstance::MainMenuJoinGame(const FString& address)
 {
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr) {
-		return;
-	}
-
-	const auto message = FString::Printf(TEXT("Joining %s"), *Address);
+	const auto message = FString::Printf(TEXT("Joining %s"), *address);
 	ClientMessage(message);
 
-	if (MainMenuWidget != nullptr) {
-		MainMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-		MouseInputForGame();
-	}
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr)
+		return;
+	MenuSystem->MainMenuClose(*playerController);
 
-	playerController->ClientTravel(Address, ::TRAVEL_Relative);
+	playerController->ClientTravel(address, ::TRAVEL_Relative);
 }
 
 void UShippyGameInstance::MainMenuQuit()
@@ -112,17 +80,12 @@ void UShippyGameInstance::MainMenuQuit()
 
 void UShippyGameInstance::InGameMenu()
 {
-	if (InGameMenuClass == nullptr)
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::InGameMenu PlayerController is null"));
 		return;
-
-	InGameMenuWidget->AddToViewport();
-	InGameMenuWidget->SetVisibility(ESlateVisibility::Visible);
-
-	const auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr)
-		return;
-	MouseInputForMenu(*playerController);
-	FocusOnWidget(*InGameMenuWidget, *playerController, FName("CancelButton"));
+	}
+	MenuSystem->InGameMenuOpen(*playerController);
 }
 
 void UShippyGameInstance::InGameMenuExitToMainMenu()
@@ -134,49 +97,18 @@ void UShippyGameInstance::InGameMenuExitToMainMenu()
 	auto sessionName = TEXT("Shippying It");
 	SessionRemove(sessionName);
 
-	InGameMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-
 	ClientMessage("Left Game");
 	playerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
 }
 
 void UShippyGameInstance::InGameMenuCancel()
 {
-	if (InGameMenuWidget == nullptr)
-		return;
-	InGameMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-	MouseInputForGame();
-}
-
-void UShippyGameInstance::MouseInputForMenu(APlayerController& playerController)
-{
-	playerController.bShowMouseCursor = true;
-
-	FInputModeUIOnly inputMode;
-	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	playerController.SetInputMode(inputMode);
-}
-
-void UShippyGameInstance::MouseInputForGame()
-{
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController == nullptr)
 		return;
-	playerController->bShowMouseCursor = false;
-
-	FInputModeGameOnly inputMode;
-	playerController->SetInputMode(inputMode);
+	MenuSystem->InGameMenuClose(*playerController);
 }
 
-void UShippyGameInstance::FocusOnWidget(UUserWidget& menuWidget, APlayerController& playerController, const FName& name)
-{
-	auto defaultWidget = menuWidget.GetWidgetFromName(name);
-	if (defaultWidget == nullptr)
-		return;
-
-	defaultWidget->SetUserFocus(&playerController);
-	defaultWidget->SetKeyboardFocus();
-}
 
 void UShippyGameInstance::SessionCreate()
 {
@@ -211,6 +143,12 @@ void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created
 		MainMenu();
 		return;
 	}
+	auto playerController = GetFirstLocalPlayerController();
+	if (playerController == nullptr) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::OnSessionCreated PlayerController null, cant close menu"));
+		return;
+	}
+	MenuSystem->MainMenuClose(*playerController);
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
