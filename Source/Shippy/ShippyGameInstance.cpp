@@ -44,6 +44,7 @@ void UShippyGameInstance::InitOnlineSubsystem()
 	OnlineSession->OnFindSessionsCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionFindComplete);
 
 	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
+	OnlineSessionSearch->bIsLanQuery = true;
 	OnlineSession->FindSessions(0, OnlineSessionSearch.ToSharedRef());
 }
 
@@ -124,6 +125,9 @@ void UShippyGameInstance::SessionCreate()
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), sessionName);
 	FOnlineSessionSettings sessionSettings;
+	sessionSettings.bIsLANMatch = true;
+	sessionSettings.NumPublicConnections = 2;
+	sessionSettings.bShouldAdvertise = true;
 	OnlineSession->CreateSession(0, sessionName, sessionSettings);
 }
 
