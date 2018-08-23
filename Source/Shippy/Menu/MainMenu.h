@@ -25,6 +25,15 @@ public:
 	class UButton* HostButton;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* SearchButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SearchBackButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SearchJoinButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class UButton* JoinButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -46,6 +55,9 @@ public:
 	class UWidget* MainMenu;
 
 	UPROPERTY(meta = (BindWidget))
+	class UWidget* SearchMenu;
+
+	UPROPERTY(meta = (BindWidget))
 	class UWidget* CreditsMenu;
 
 	void SetInterface(MainMenuInterface* Interface);
@@ -55,6 +67,15 @@ private:
 
 	UFUNCTION()
 	void OnHostClicked();
+
+	UFUNCTION()
+	void OnSearchClicked();
+
+	UFUNCTION()
+	void OnSearchBackClicked();
+
+	UFUNCTION()
+	void OnSearchJoinClicked();
 
 	UFUNCTION()
 	void OnJoinClicked();

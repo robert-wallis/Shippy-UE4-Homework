@@ -2,7 +2,6 @@
 
 #include "MovingPlatform.h"
 
-
 AMovingPlatform::AMovingPlatform(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

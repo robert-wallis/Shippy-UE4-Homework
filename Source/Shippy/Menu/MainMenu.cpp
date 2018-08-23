@@ -31,6 +31,9 @@ bool UMainMenu::Initialize()
 		return false;
 
 	HostButton->OnClicked.AddDynamic(this, &UMainMenu::OnHostClicked);
+	SearchButton->OnClicked.AddDynamic(this, &UMainMenu::OnSearchClicked);
+	SearchBackButton->OnClicked.AddDynamic(this, &UMainMenu::OnSearchBackClicked);
+	SearchJoinButton->OnClicked.AddDynamic(this, &UMainMenu::OnSearchJoinClicked);
 	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OnJoinClicked);
 	CreditsButton->OnClicked.AddDynamic(this, &UMainMenu::OnCreditsClicked);
 	QuitButton->OnClicked.AddDynamic(this, &UMainMenu::OnQuitClicked);
@@ -51,6 +54,21 @@ void UMainMenu::OnHostClicked()
 	}
 
 	Interface->MainMenuHost();
+}
+
+void UMainMenu::OnSearchClicked()
+{
+	Switcher->SetActiveWidget(SearchMenu);
+}
+
+void UMainMenu::OnSearchBackClicked()
+{
+	Switcher->SetActiveWidget(MainMenu);
+}
+
+void UMainMenu::OnSearchJoinClicked()
+{
+	UE_LOG(LogShippy, Warning, TEXT("TODO:  UMainMenu::OnSearchJoinClicked Join Selected Server"));
 }
 
 void UMainMenu::OnJoinClicked()
