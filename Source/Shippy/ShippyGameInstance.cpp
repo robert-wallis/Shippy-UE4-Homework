@@ -10,6 +10,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 
+#include "Runtime/Engine/Classes/GameFramework/PlayerState.h"
+
 #include "Menu/MenuSystem.h"
 #include "LogShippy.h"
 

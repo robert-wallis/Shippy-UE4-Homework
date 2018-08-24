@@ -36,10 +36,10 @@ public:
 	
 	void Init() override;
 
-	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
+	UFUNCTION(BlueprintCallable)
 	void MainMenu();
 
-	UFUNCTION(Exec, BlueprintCallable, Category=Menu)
+	UFUNCTION()
 	void InGameMenu();
 
 private:
