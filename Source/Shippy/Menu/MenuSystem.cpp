@@ -15,15 +15,15 @@ UMenuSystem::UMenuSystem(const FObjectInitializer &ObjectInitializer)
 	static ConstructorHelpers::FClassFinder<UUserWidget> MainMenuBPClass(TEXT("/Game/Menu/MainMenu_WBP"));
 	MainMenuClass = MainMenuBPClass.Class;
 	if (MainMenuClass == nullptr) {
-		UE_LOG(LogShippyMenu, Error, TEXT("MainMenuClass is null"));
+		UE_LOG(LogShippyMenu, Error, TEXT("Couldn't find MainMenu_WBP for MainMenuClass"));
 	}
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/Menu/InGameMenu_WBP"));
 	InGameMenuClass = InGameMenuBPClass.Class;
 	if (InGameMenuClass == nullptr) {
-		UE_LOG(LogShippyMenu, Error, TEXT("InGameMenuClass is null"));
-		return;
+		UE_LOG(LogShippyMenu, Error, TEXT("Couldn't find InGameMenu_WBP for InGameMenuClass"));
 	}
+
 }
 
 void UMenuSystem::Init(UGameInstance* gameInstance, class MainMenuInterface* mainMenuInterface, class InGameMenuInterface* inGameMenuInterface)
@@ -83,6 +83,20 @@ void UMenuSystem::InGameMenuClose(APlayerController &playerController)
 
 	InGameMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 	MouseInputForGame(playerController);
+}
+
+void UMenuSystem::SearchClearResults()
+{
+	if (MainMenuWidget == nullptr)
+		return;
+	SearchClearResults();
+}
+
+void UMenuSystem::SearchAddServer(const FString& name, const FString& address)
+{
+	if (MainMenuWidget == nullptr)
+		return;
+	MainMenuWidget->SearchAddServer(name, address);
 }
 
 void UMenuSystem::MouseInputForMenu(APlayerController &playerController)

@@ -43,6 +43,12 @@ public:
 	void InGameMenuOpen(class APlayerController &playerController);
 	void InGameMenuClose(class APlayerController &playerController);
 
+	UFUNCTION()
+	void SearchClearResults();
+
+	UFUNCTION()
+	void SearchAddServer(const FString& name, const FString& address);
+
 private:
 
 	void MouseInputForMenu(class APlayerController &playerController);

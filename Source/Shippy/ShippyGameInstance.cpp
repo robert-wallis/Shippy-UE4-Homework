@@ -162,9 +162,11 @@ void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created
 
 void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
 {
-	UE_LOG(LogShippy, Log, TEXT("Find Session Complete"));
+	UE_LOG(LogShippy, Log, TEXT("Find Session Complete: %s"), wasSuccessful ? TEXT("success") : TEXT("error"));
+	MenuSystem->SearchClearResults();
 	for (auto res : OnlineSessionSearch->SearchResults) {
-		UE_LOG(LogShippy, Log, TEXT("Found Session: %s"), *res.GetSessionIdStr())
+		UE_LOG(LogShippy, Log, TEXT("Found Session: %s"), *res.GetSessionIdStr());
+		MenuSystem->SearchAddServer(res.GetSessionIdStr(), res.GetSessionIdStr());
 	}
 }
 

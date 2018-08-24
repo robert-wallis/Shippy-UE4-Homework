@@ -5,22 +5,23 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MainMenuInterface.h"
+#include "ServerRowInterface.h"
 #include "MainMenu.generated.h"
 
 /**
  * Bindings for the Main Menu blueprint widget.
  */
 UCLASS()
-class SHIPPY_API UMainMenu : public UUserWidget
+class SHIPPY_API UMainMenu : public UUserWidget, public ServerRowInterface
 {
 	GENERATED_BODY()
+
+	TSubclassOf<class UUserWidget> ServerRowClass;
 
 	MainMenuInterface* Interface;
 
 public:
 
-	bool Initialize() override;
-	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* HostButton;
 
@@ -28,10 +29,10 @@ public:
 	class UButton* SearchButton;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* SearchBackButton;
+	class UPanelWidget* SearchList;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* SearchJoinButton;
+	class UButton* SearchBackButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* JoinButton;
@@ -60,8 +61,17 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UWidget* CreditsMenu;
 
+	UMainMenu(const FObjectInitializer& ObjectInitializer);
+
+	bool Initialize() override;
+
 	void SetInterface(MainMenuInterface* Interface);
 
+	UFUNCTION()
+	void SearchClearResults();
+
+	UFUNCTION()
+	void SearchAddServer(const FString& name, const FString& address);
 
 private:
 
@@ -75,9 +85,6 @@ private:
 	void OnSearchBackClicked();
 
 	UFUNCTION()
-	void OnSearchJoinClicked();
-
-	UFUNCTION()
 	void OnJoinClicked();
 
 	UFUNCTION()
@@ -88,6 +95,9 @@ private:
 
 	UFUNCTION()
 	void OnCreditsClicked();
+
+	UFUNCTION()
+	void ServerRowJoin(const FString &address) override;
 
 };
 
