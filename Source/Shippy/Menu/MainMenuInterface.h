@@ -14,5 +14,6 @@ public:
 	virtual void MainMenuHost() = 0;
 	virtual void MainMenuJoinGame(const FString &Address) = 0;
 	virtual void MainMenuQuit() = 0;
+	virtual void MainMenuServerRefresh() = 0;
 	
 };

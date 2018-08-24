@@ -56,6 +56,9 @@ private:
 	void MainMenuQuit() override;
 
 	UFUNCTION()
+	void MainMenuServerRefresh() override;
+
+	UFUNCTION()
 	void InGameMenuExitToMainMenu() override;
 
 	UFUNCTION()

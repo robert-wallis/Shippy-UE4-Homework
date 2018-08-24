@@ -43,9 +43,6 @@ void UShippyGameInstance::InitOnlineSubsystem()
 	OnlineSession->OnCreateSessionCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionCreated);
 	OnlineSession->OnFindSessionsCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionFindComplete);
 
-	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
-	OnlineSessionSearch->bIsLanQuery = true;
-	OnlineSession->FindSessions(0, OnlineSessionSearch.ToSharedRef());
 }
 
 void UShippyGameInstance::MainMenu()
@@ -81,6 +78,14 @@ void UShippyGameInstance::MainMenuQuit()
 {
 	ClientMessage("MainMenu Quit");
 	GetFirstGamePlayer()->ConsoleCommand("QUIT");
+}
+
+void UShippyGameInstance::MainMenuServerRefresh()
+{
+	UE_LOG(LogShippy, Log, TEXT("UShippyGameInstance::MainMenuServerRefresh"));
+	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
+	OnlineSessionSearch->bIsLanQuery = true;
+	OnlineSession->FindSessions(0, OnlineSessionSearch.ToSharedRef());
 }
 
 void UShippyGameInstance::InGameMenu()
@@ -164,6 +169,8 @@ void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
 {
 	UE_LOG(LogShippy, Log, TEXT("Find Session Complete: %s"), wasSuccessful ? TEXT("success") : TEXT("error"));
 	MenuSystem->SearchClearResults();
+	if (!OnlineSessionSearch.IsValid())
+		return;
 	for (auto res : OnlineSessionSearch->SearchResults) {
 		UE_LOG(LogShippy, Log, TEXT("Found Session: %s"), *res.GetSessionIdStr());
 		MenuSystem->SearchAddServer(res.GetSessionIdStr(), res.GetSessionIdStr());

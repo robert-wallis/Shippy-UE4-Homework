@@ -90,6 +90,7 @@ void UMainMenu::OnHostClicked()
 void UMainMenu::OnSearchClicked()
 {
 	Switcher->SetActiveWidget(SearchMenu);
+	Interface->MainMenuServerRefresh();
 }
 
 void UMainMenu::OnSearchBackClicked()

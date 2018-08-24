@@ -89,7 +89,7 @@ void UMenuSystem::SearchClearResults()
 {
 	if (MainMenuWidget == nullptr)
 		return;
-	SearchClearResults();
+	MainMenuWidget->SearchClearResults();
 }
 
 void UMenuSystem::SearchAddServer(const FString& name, const FString& address)
