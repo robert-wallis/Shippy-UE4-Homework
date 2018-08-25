@@ -27,10 +27,10 @@ void UServerRow::SetInterface(ServerRowInterface* Interface)
 	this->Interface = Interface;
 }
 
-void UServerRow::SetServer(const FString& Name, const FString& Address)
+void UServerRow::SetServer(const FString& Name, const int SearchIndex)
 {
 	ServerNameText->SetText(FText::FromString(Name));
-	this->Address = Address;
+	this->SearchIndex = SearchIndex;
 }
 
 void UServerRow::OnJoinClicked()
@@ -40,5 +40,5 @@ void UServerRow::OnJoinClicked()
 		return;
 	}
 
-	this->Interface->ServerRowJoin(Address);
+	this->Interface->ServerRowJoin(SearchIndex);
 }

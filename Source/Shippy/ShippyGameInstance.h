@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
+#include "OnlineSessionInterface.h"
 
 #include "Menu/MainMenuInterface.h"
 #include "Menu/InGameMenuInterface.h"
@@ -53,6 +54,9 @@ private:
 	void MainMenuJoinGame(const FString& Address) override;
 
 	UFUNCTION()
+	void MainMenuJoinServer(const int ServerIndex) override;
+
+	UFUNCTION()
 	void MainMenuQuit() override;
 
 	UFUNCTION()
@@ -68,6 +72,7 @@ private:
 	void SessionRemove(const FName& sessionName);
 	void OnSessionCreated(const FName sessionName, bool created);
 	void OnSessionFindComplete(bool wasSuccessful);
+	void OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void ClientMessage(const FString& message);
 

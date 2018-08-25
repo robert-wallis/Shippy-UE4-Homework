@@ -11,6 +11,6 @@ class SHIPPY_API ServerRowInterface
 {
 public:
 
-	virtual void ServerRowJoin(const FString &Address) = 0;
+	virtual void ServerRowJoin(const int ServerIndex) = 0;
 
 };

@@ -71,7 +71,7 @@ public:
 	void SearchClearResults();
 
 	UFUNCTION()
-	void SearchAddServer(const FString& name, const FString& address);
+	void SearchAddServer(const FString& Name, const int SearchIndex);
 
 private:
 
@@ -97,7 +97,7 @@ private:
 	void OnCreditsClicked();
 
 	UFUNCTION()
-	void ServerRowJoin(const FString &address) override;
+	void ServerRowJoin(const int SearchIndex) override;
 
 };
 

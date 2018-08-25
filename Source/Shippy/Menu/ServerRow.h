@@ -15,7 +15,7 @@ class SHIPPY_API UServerRow : public UUserWidget
 {
 	GENERATED_BODY()
 
-	FString Address;
+	int SearchIndex;
 	ServerRowInterface* Interface;
 	
 public:
@@ -30,7 +30,7 @@ public:
 
 	void SetInterface(ServerRowInterface* Interface);
 
-	void SetServer(const FString& Name, const FString& Address);
+	void SetServer(const FString& Name, const int SearchIndex);
 
 	UFUNCTION()
 	void OnJoinClicked();

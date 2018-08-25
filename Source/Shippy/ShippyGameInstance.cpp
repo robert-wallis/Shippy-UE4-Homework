@@ -15,6 +15,8 @@
 #include "Menu/MenuSystem.h"
 #include "LogShippy.h"
 
+#define SESSION_NAME TEXT("Shippying It")
+
 UShippyGameInstance::UShippyGameInstance(const FObjectInitializer &ObjectInitializer)
 {
 	MenuSystem = ObjectInitializer.CreateDefaultSubobject<UMenuSystem>(this, TEXT("MenuSystem"));
@@ -44,7 +46,7 @@ void UShippyGameInstance::InitOnlineSubsystem()
 
 	OnlineSession->OnCreateSessionCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionCreated);
 	OnlineSession->OnFindSessionsCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionFindComplete);
-
+	OnlineSession->OnJoinSessionCompleteDelegates.AddUObject(this, &UShippyGameInstance::OnSessionJoinComplete);
 }
 
 void UShippyGameInstance::MainMenu()
@@ -73,7 +75,22 @@ void UShippyGameInstance::MainMenuJoinGame(const FString& address)
 		return;
 	MenuSystem->MainMenuClose(*playerController);
 
-	playerController->ClientTravel(address, ::TRAVEL_Relative);
+	playerController->ClientTravel(address, ::TRAVEL_Absolute);
+}
+
+void UShippyGameInstance::MainMenuJoinServer(const int ServerIndex)
+{
+	if (!OnlineSessionSearch.IsValid()) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::MainMenuJoinServer(%d) OnlineSessionSearch is invalid"), ServerIndex);
+		return;
+	}
+	if (!OnlineSessionSearch->SearchResults.IsValidIndex(ServerIndex)) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::MainMenuJoinServer(%d) ServerIndex > %d"), ServerIndex, OnlineSessionSearch->SearchResults.Num());
+		return;
+	}
+	auto PlayerId = GetPrimaryPlayerUniqueId();
+	auto SessionSearchResult = OnlineSessionSearch->SearchResults[ServerIndex];
+	OnlineSession->JoinSession(*PlayerId, SESSION_NAME, SessionSearchResult);
 }
 
 void UShippyGameInstance::MainMenuQuit()
@@ -106,8 +123,7 @@ void UShippyGameInstance::InGameMenuExitToMainMenu()
 	if (playerController == nullptr)
 		return;
 
-	auto sessionName = TEXT("Shippying It");
-	SessionRemove(sessionName);
+	SessionRemove(SESSION_NAME);
 
 	ClientMessage("Left Game");
 	playerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
@@ -127,15 +143,15 @@ void UShippyGameInstance::SessionCreate()
 	if (!OnlineSession.IsValid())
 		return;
 
-	auto sessionName = TEXT("Shippying It");
-	SessionRemove(sessionName);
+	SessionRemove(SESSION_NAME);
 
-	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), sessionName);
+	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
 	FOnlineSessionSettings sessionSettings;
 	sessionSettings.bIsLANMatch = true;
 	sessionSettings.NumPublicConnections = 2;
 	sessionSettings.bShouldAdvertise = true;
-	OnlineSession->CreateSession(0, sessionName, sessionSettings);
+	auto PlayerId = GetPrimaryPlayerUniqueId();
+	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, sessionSettings);
 }
 
 void UShippyGameInstance::SessionRemove(const FName& sessionName)
@@ -163,25 +179,49 @@ void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created
 		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::OnSessionCreated PlayerController null, cant close menu"));
 		return;
 	}
+	if (!GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen")) {
+		ClientMessage(TEXT("Error Joining Server"));
+		return;
+	}
 	MenuSystem->MainMenuClose(*playerController);
-	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 
 void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
 {
 	UE_LOG(LogShippy, Log, TEXT("Find Session Complete: %s"), wasSuccessful ? TEXT("success") : TEXT("error"));
 	MenuSystem->SearchClearResults();
+
 	if (!OnlineSessionSearch.IsValid())
 		return;
-	for (auto res : OnlineSessionSearch->SearchResults) {
-		UE_LOG(LogShippy, Log, TEXT("Found Session: %s"), *res.GetSessionIdStr());
-		MenuSystem->SearchAddServer(res.GetSessionIdStr(), res.GetSessionIdStr());
+
+	for (int i = 0; i < OnlineSessionSearch->SearchResults.Num(); i++) {
+		auto res = OnlineSessionSearch->SearchResults[i];
+		UE_LOG(LogShippy, Log, TEXT("Found Session %d: %s"), i, *res.GetSessionIdStr());
+		
+		MenuSystem->SearchAddServer(res.GetSessionIdStr(), i);
 	}
+}
+
+void UShippyGameInstance::OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	//if (Result != EOnJoinSessionCompleteResult::Success) {
+	//	UE_LOG(LogShippy, Error, TEXT("Couldn't join %s: EOnJoinSessionCompleteResult#%d"), *SessionName.ToString(), Result);
+	//	return;
+	//}
+
+	FString TravelURL;
+	if (!OnlineSession->GetResolvedConnectString(SessionName, TravelURL)) {
+		UE_LOG(LogShippy, Error, TEXT("OnSessionJoinComplete Couldn't resolve connect string %s"), *SessionName.ToString());
+		return;
+	}
+
+	MainMenuJoinGame(TravelURL);
 }
 
 void UShippyGameInstance::ClientMessage(const FString & message)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, message);
+	UE_LOG(LogShippy, Log, TEXT("%s"), *message);
 	auto playerController = GetFirstLocalPlayerController();
 	if (playerController != nullptr) {
 		playerController->ClientMessage(message);

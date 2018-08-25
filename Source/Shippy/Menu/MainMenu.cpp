@@ -69,12 +69,12 @@ void UMainMenu::SearchClearResults()
 	SearchList->ClearChildren();
 }
 
-void UMainMenu::SearchAddServer(const FString& name, const FString& address)
+void UMainMenu::SearchAddServer(const FString& Name, const int SearchIndex)
 {
 	auto row = CreateWidget<UServerRow>(GetWorld(), ServerRowClass);
 	row->SetInterface(this);
 	SearchList->AddChild(row);
-	row->SetServer(name, address);
+	row->SetServer(Name, SearchIndex);
 }
 
 void UMainMenu::OnHostClicked()
@@ -128,10 +128,9 @@ void UMainMenu::OnCreditsClicked()
 	Switcher->SetActiveWidget(CreditsMenu);
 }
 
-void UMainMenu::ServerRowJoin(const FString &address)
+void UMainMenu::ServerRowJoin(const int SearchIndex)
 {
-	UE_LOG(LogShippy, Log, TEXT("UMainMenu::ServerRowJoin: %s"), *address);
-	Interface->MainMenuJoinGame(address);
+	Interface->MainMenuJoinServer(SearchIndex);
 }
 
 void UMainMenu::OnQuitClicked()

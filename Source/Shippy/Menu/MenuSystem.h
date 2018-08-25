@@ -47,7 +47,7 @@ public:
 	void SearchClearResults();
 
 	UFUNCTION()
-	void SearchAddServer(const FString& name, const FString& address);
+	void SearchAddServer(const FString& Name, const int SearchIndex);
 
 private:
 

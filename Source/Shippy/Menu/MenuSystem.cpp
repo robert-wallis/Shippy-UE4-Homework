@@ -92,11 +92,11 @@ void UMenuSystem::SearchClearResults()
 	MainMenuWidget->SearchClearResults();
 }
 
-void UMenuSystem::SearchAddServer(const FString& name, const FString& address)
+void UMenuSystem::SearchAddServer(const FString& Name, const int SearchIndex)
 {
 	if (MainMenuWidget == nullptr)
 		return;
-	MainMenuWidget->SearchAddServer(name, address);
+	MainMenuWidget->SearchAddServer(Name, SearchIndex);
 }
 
 void UMenuSystem::MouseInputForMenu(APlayerController &playerController)
