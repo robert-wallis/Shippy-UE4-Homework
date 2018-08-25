@@ -204,10 +204,10 @@ void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
 
 void UShippyGameInstance::OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
-	//if (Result != EOnJoinSessionCompleteResult::Success) {
-	//	UE_LOG(LogShippy, Error, TEXT("Couldn't join %s: EOnJoinSessionCompleteResult#%d"), *SessionName.ToString(), Result);
-	//	return;
-	//}
+	if (Result != EOnJoinSessionCompleteResult::Success) {
+		UE_LOG(LogShippy, Error, TEXT("Couldn't join %s: EOnJoinSessionCompleteResult#%d"), *SessionName.ToString(), Result);
+		return;
+	}
 
 	FString TravelURL;
 	if (!OnlineSession->GetResolvedConnectString(SessionName, TravelURL)) {
