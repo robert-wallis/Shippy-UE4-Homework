@@ -103,8 +103,11 @@ void UShippyGameInstance::MainMenuServerRefresh()
 {
 	UE_LOG(LogShippy, Log, TEXT("UShippyGameInstance::MainMenuServerRefresh"));
 	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
-	OnlineSessionSearch->bIsLanQuery = true;
-	OnlineSession->FindSessions(0, OnlineSessionSearch.ToSharedRef());
+	OnlineSessionSearch->bIsLanQuery = false;
+	OnlineSessionSearch->MaxSearchResults = 100;
+	OnlineSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+	auto PlayerId = GetPrimaryPlayerUniqueId();
+	OnlineSession->FindSessions(*PlayerId, OnlineSessionSearch.ToSharedRef());
 }
 
 void UShippyGameInstance::InGameMenu()
@@ -147,9 +150,10 @@ void UShippyGameInstance::SessionCreate()
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
 	FOnlineSessionSettings sessionSettings;
-	sessionSettings.bIsLANMatch = true;
+	sessionSettings.bIsLANMatch = false;
 	sessionSettings.NumPublicConnections = 2;
 	sessionSettings.bShouldAdvertise = true;
+	sessionSettings.bUsesPresence = true;
 	auto PlayerId = GetPrimaryPlayerUniqueId();
 	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, sessionSettings);
 }

@@ -17,10 +17,6 @@ public class Shippy : ModuleRules
 			"HeadMountedDisplay",
 			"UMG",
 			"OnlineSubsystem",
-		});
-
-		DynamicallyLoadedModuleNames.AddRange(new string[]
-		{
 			"OnlineSubsystemSteam"
 		});
 

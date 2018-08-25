@@ -17,7 +17,7 @@
 	"Plugins": [
 		{
 			"Name": "OnlineSubsystemSteam",
-			"Enabled": false
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
