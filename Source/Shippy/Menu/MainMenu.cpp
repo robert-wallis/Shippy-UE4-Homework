@@ -71,10 +71,10 @@ void UMainMenu::SearchClearResults()
 
 void UMainMenu::SearchAddServer(const FString& Name, const int SearchIndex)
 {
-	auto row = CreateWidget<UServerRow>(GetWorld(), ServerRowClass);
-	row->SetInterface(this);
-	SearchList->AddChild(row);
-	row->SetServer(Name, SearchIndex);
+	auto Row = CreateWidget<UServerRow>(GetWorld(), ServerRowClass);
+	Row->SetInterface(this);
+	SearchList->AddChild(Row);
+	Row->SetServer(Name, SearchIndex);
 }
 
 void UMainMenu::OnHostClicked()
@@ -108,14 +108,14 @@ void UMainMenu::OnJoinClicked()
 	if (AddressTextBox == nullptr)
 		return;
 
-	auto address = AddressTextBox->Text.ToString();
+	auto Address = AddressTextBox->Text.ToString();
 
-	if (address.Len() <= 0) {
+	if (Address.Len() <= 0) {
 		return;
 	}
 
-	UE_LOG(LogShippy, Log, TEXT("UMainMenu::OnJoinClicked: %s"), *address);
-	Interface->MainMenuJoinGame(address);
+	UE_LOG(LogShippy, Log, TEXT("UMainMenu::OnJoinClicked: %s"), *Address);
+	Interface->MainMenuJoinGame(Address);
 }
 
 void UMainMenu::OnCreditsClicked()

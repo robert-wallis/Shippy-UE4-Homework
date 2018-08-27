@@ -30,15 +30,15 @@ void UShippyGameInstance::Init()
 
 void UShippyGameInstance::InitOnlineSubsystem()
 {
-	auto subsystem = IOnlineSubsystem::Get();
-	if (subsystem == nullptr) {
+	auto SubSystem = IOnlineSubsystem::Get();
+	if (SubSystem == nullptr) {
 		UE_LOG(LogShippy, Warning, TEXT("No Online Subsystem"));
 		return;
 	}
 
-	UE_LOG(LogShippy, Log, TEXT("OnlineSubsystem: %s"), *subsystem->GetSubsystemName().ToString());
+	UE_LOG(LogShippy, Log, TEXT("OnlineSubsystem: %s"), *SubSystem->GetSubsystemName().ToString());
 
-	OnlineSession = subsystem->GetSessionInterface();
+	OnlineSession = SubSystem->GetSessionInterface();
 	if (!OnlineSession.IsValid()) {
 		UE_LOG(LogShippy, Warning, TEXT("Online Subsystem Interface Invalid :("));
 		return;
@@ -51,12 +51,12 @@ void UShippyGameInstance::InitOnlineSubsystem()
 
 void UShippyGameInstance::MainMenu()
 {
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr) {
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr) {
 		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::MainMenu PlayerController is null"));
 		return;
 	}
-	MenuSystem->MainMenuOpen(*playerController);
+	MenuSystem->MainMenuOpen(*PlayerController);
 }
 
 void UShippyGameInstance::MainMenuHost()
@@ -65,17 +65,18 @@ void UShippyGameInstance::MainMenuHost()
 	SessionCreate();
 }
 
-void UShippyGameInstance::MainMenuJoinGame(const FString& address)
+void UShippyGameInstance::MainMenuJoinGame(const FString& Address)
 {
-	const auto message = FString::Printf(TEXT("Joining %s"), *address);
-	ClientMessage(message);
+	const auto Message = FString::Printf(TEXT("Joining %s"), *Address);
+	ClientMessage(Message);
 
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr)
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr) {
 		return;
-	MenuSystem->MainMenuClose(*playerController);
+	}
+	MenuSystem->MainMenuClose(*PlayerController);
 
-	playerController->ClientTravel(address, ::TRAVEL_Absolute);
+	PlayerController->ClientTravel(Address, ::TRAVEL_Absolute);
 }
 
 void UShippyGameInstance::MainMenuJoinServer(const int ServerIndex)
@@ -112,32 +113,32 @@ void UShippyGameInstance::MainMenuServerRefresh()
 
 void UShippyGameInstance::InGameMenu()
 {
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr) {
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr) {
 		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::InGameMenu PlayerController is null"));
 		return;
 	}
-	MenuSystem->InGameMenuOpen(*playerController);
+	MenuSystem->InGameMenuOpen(*PlayerController);
 }
 
 void UShippyGameInstance::InGameMenuExitToMainMenu()
 {
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr)
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr)
 		return;
 
 	SessionRemove(SESSION_NAME);
 
 	ClientMessage("Left Game");
-	playerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
+	PlayerController->ClientTravel("/Game/Menu/MainMenu", ::TRAVEL_Relative);
 }
 
 void UShippyGameInstance::InGameMenuCancel()
 {
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr)
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr)
 		return;
-	MenuSystem->InGameMenuClose(*playerController);
+	MenuSystem->InGameMenuClose(*PlayerController);
 }
 
 
@@ -149,37 +150,37 @@ void UShippyGameInstance::SessionCreate()
 	SessionRemove(SESSION_NAME);
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
-	FOnlineSessionSettings sessionSettings;
-	sessionSettings.bIsLANMatch = false;
-	sessionSettings.NumPublicConnections = 2;
-	sessionSettings.bShouldAdvertise = true;
-	sessionSettings.bUsesPresence = true;
+	FOnlineSessionSettings SessionSettings;
+	SessionSettings.bIsLANMatch = false;
+	SessionSettings.NumPublicConnections = 2;
+	SessionSettings.bShouldAdvertise = true;
+	SessionSettings.bUsesPresence = true;
 	auto PlayerId = GetPrimaryPlayerUniqueId();
-	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, sessionSettings);
+	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, SessionSettings);
 }
 
-void UShippyGameInstance::SessionRemove(const FName& sessionName)
+void UShippyGameInstance::SessionRemove(const FName& SessionName)
 {
 	if (!OnlineSession.IsValid())
 		return;
 
-	auto namedOnlineSession = OnlineSession->GetNamedSession(sessionName);
-	if (namedOnlineSession != nullptr) {
-		UE_LOG(LogShippy, Log, TEXT("Closing existing session: %s"), *sessionName.ToString());
-		OnlineSession->RemoveNamedSession(sessionName);
-		OnlineSession->DestroySession(sessionName);
+	auto NamedSession = OnlineSession->GetNamedSession(SessionName);
+	if (NamedSession != nullptr) {
+		UE_LOG(LogShippy, Log, TEXT("Closing existing session: %s"), *SessionName.ToString());
+		OnlineSession->RemoveNamedSession(SessionName);
+		OnlineSession->DestroySession(SessionName);
 	}
 }
 
-void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created)
+void UShippyGameInstance::OnSessionCreated(const FName SessionName, bool Created)
 {
-	UE_LOG(LogShippy, Log, TEXT("Session Created: %d, %s"), created, *sessionName.ToString());
-	if (!created) {
+	UE_LOG(LogShippy, Log, TEXT("Session Created: %d, %s"), Created, *SessionName.ToString());
+	if (!Created) {
 		MainMenu();
 		return;
 	}
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController == nullptr) {
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr) {
 		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::OnSessionCreated PlayerController null, cant close menu"));
 		return;
 	}
@@ -187,22 +188,22 @@ void UShippyGameInstance::OnSessionCreated(const FName sessionName, bool created
 		ClientMessage(TEXT("Error Joining Server"));
 		return;
 	}
-	MenuSystem->MainMenuClose(*playerController);
+	MenuSystem->MainMenuClose(*PlayerController);
 }
 
-void UShippyGameInstance::OnSessionFindComplete(bool wasSuccessful)
+void UShippyGameInstance::OnSessionFindComplete(bool WasSuccessful)
 {
-	UE_LOG(LogShippy, Log, TEXT("Find Session Complete: %s"), wasSuccessful ? TEXT("success") : TEXT("error"));
+	UE_LOG(LogShippy, Log, TEXT("Find Session Complete: %s"), WasSuccessful ? TEXT("success") : TEXT("error"));
 	MenuSystem->SearchClearResults();
 
 	if (!OnlineSessionSearch.IsValid())
 		return;
 
 	for (int i = 0; i < OnlineSessionSearch->SearchResults.Num(); i++) {
-		auto res = OnlineSessionSearch->SearchResults[i];
-		UE_LOG(LogShippy, Log, TEXT("Found Session %d: %s"), i, *res.GetSessionIdStr());
+		auto SessionResult = OnlineSessionSearch->SearchResults[i];
+		UE_LOG(LogShippy, Log, TEXT("Found Session %d: %s"), i, *SessionResult.GetSessionIdStr());
 		
-		MenuSystem->SearchAddServer(res.GetSessionIdStr(), i);
+		MenuSystem->SearchAddServer(SessionResult.GetSessionIdStr(), i);
 	}
 }
 
@@ -222,12 +223,12 @@ void UShippyGameInstance::OnSessionJoinComplete(const FName SessionName, EOnJoin
 	MainMenuJoinGame(TravelURL);
 }
 
-void UShippyGameInstance::ClientMessage(const FString & message)
+void UShippyGameInstance::ClientMessage(const FString & Message)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, message);
-	UE_LOG(LogShippy, Log, TEXT("%s"), *message);
-	auto playerController = GetFirstLocalPlayerController();
-	if (playerController != nullptr) {
-		playerController->ClientMessage(message);
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, Message);
+	UE_LOG(LogShippy, Log, TEXT("%s"), *Message);
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController != nullptr) {
+		PlayerController->ClientMessage(Message);
 	}
 }

@@ -32,7 +32,7 @@ private:
 	
 	void BeginPlay() override;
 	
-	void Tick(float deltaSeconds) override;
+	void Tick(float DeltaSeconds) override;
 
 	void TickMovePlatform();
 

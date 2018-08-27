@@ -69,11 +69,11 @@ private:
 	void InGameMenuCancel() override;
 
 	void SessionCreate();
-	void SessionRemove(const FName& sessionName);
-	void OnSessionCreated(const FName sessionName, bool created);
-	void OnSessionFindComplete(bool wasSuccessful);
+	void SessionRemove(const FName& SessionName);
+	void OnSessionCreated(const FName SessionName, bool Created);
+	void OnSessionFindComplete(bool WasSuccessful);
 	void OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
-	void ClientMessage(const FString& message);
+	void ClientMessage(const FString& Message);
 
 };

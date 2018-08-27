@@ -20,21 +20,21 @@ void AMovingPlatform::BeginPlay()
 	}
 }
 
-void AMovingPlatform::Tick(float deltaSeconds)
+void AMovingPlatform::Tick(float DeltaSeconds)
 {
-	Super::Tick(deltaSeconds);
+	Super::Tick(DeltaSeconds);
 	if (!HasAuthority())
 		return;
 
 	if (MovingTriggerCount > 0) {
-		AliveTime += deltaSeconds;
+		AliveTime += DeltaSeconds;
 		TickMovePlatform();
 	}
 }
 
 void AMovingPlatform::TickMovePlatform()
 {
-	auto t = (sin(AliveTime * Speed) + 1.0f) * 0.5;
-	auto location = OriginalLocation + (TargetLocation * t);
-	SetActorLocation(location, false);
+	auto Time = (sin(AliveTime * Speed) + 1.0f) * 0.5;
+	auto Location = OriginalLocation + (TargetLocation * Time);
+	SetActorLocation(Location, false);
 }

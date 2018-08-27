@@ -35,13 +35,13 @@ public:
 
 	UMenuSystem(const FObjectInitializer &ObjectInitializer);
 
-	void Init(UGameInstance* gameInstance, class MainMenuInterface* mainMenuInterface, class InGameMenuInterface* inGameMenuInterface);
+	void Init(UGameInstance* GameInstance, class MainMenuInterface* MainMenuInterface, class InGameMenuInterface* InGameMenuInterface);
 
-	void MainMenuOpen(class APlayerController &playerController);
-	void MainMenuClose(class APlayerController &playerController);
+	void MainMenuOpen(class APlayerController &PlayerController);
+	void MainMenuClose(class APlayerController &PlayerController);
 
-	void InGameMenuOpen(class APlayerController &playerController);
-	void InGameMenuClose(class APlayerController &playerController);
+	void InGameMenuOpen(class APlayerController &PlayerController);
+	void InGameMenuClose(class APlayerController &PlayerController);
 
 	UFUNCTION()
 	void SearchClearResults();
@@ -51,7 +51,7 @@ public:
 
 private:
 
-	void MouseInputForMenu(class APlayerController &playerController);
-	void MouseInputForGame(class APlayerController &playerController);
-	void FocusOnWidget(class APlayerController &playerController, class UUserWidget& menuWidget, const FName& Widget);
+	void MouseInputForMenu(class APlayerController &PlayerController);
+	void MouseInputForGame(class APlayerController &PlayerController);
+	void FocusOnWidget(class APlayerController &PlayerController, class UUserWidget& MenuWidget, const FName& Widget);
 };

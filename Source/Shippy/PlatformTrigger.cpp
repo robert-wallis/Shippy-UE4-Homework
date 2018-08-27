@@ -37,15 +37,15 @@ void APlatformTrigger::Tick(float DeltaTime)
 
 void APlatformTrigger::ActivateTrigger()
 {
-	for (auto& platform : Platforms) {
-		platform->MovingTriggerCount ++;
+	for (auto& Platform : Platforms) {
+		Platform->MovingTriggerCount ++;
 	}
 }
 
 void APlatformTrigger::DeactivateTrigger()
 {
-	for (auto& platform : Platforms) {
-		platform->MovingTriggerCount --;
+	for (auto& Platform : Platforms) {
+		Platform->MovingTriggerCount --;
 	}
 }
 

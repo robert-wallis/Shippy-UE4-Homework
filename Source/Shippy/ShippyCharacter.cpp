@@ -141,11 +141,11 @@ void AShippyCharacter::MoveRight(float Value)
 
 void AShippyCharacter::OnMenu()
 {
-	auto gameInstance = GetGameInstance();
-	if (gameInstance == nullptr)
+	auto GameInstance = GetGameInstance();
+	if (GameInstance == nullptr)
 		return;
-	auto shippyGame = static_cast<UShippyGameInstance*>(gameInstance);
-	if (shippyGame == nullptr)
+	auto ShippyGame = static_cast<UShippyGameInstance*>(GameInstance);
+	if (ShippyGame == nullptr)
 		return;
-	shippyGame->InGameMenu();
+	ShippyGame->InGameMenu();
 }

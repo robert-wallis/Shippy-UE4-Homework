@@ -26,63 +26,63 @@ UMenuSystem::UMenuSystem(const FObjectInitializer &ObjectInitializer)
 
 }
 
-void UMenuSystem::Init(UGameInstance* gameInstance, class MainMenuInterface* mainMenuInterface, class InGameMenuInterface* inGameMenuInterface)
+void UMenuSystem::Init(UGameInstance* GameInstance, class MainMenuInterface* MainMenuInterface, class InGameMenuInterface* InGameMenuInterface)
 {
-	MainMenuWidget = CreateWidget<UMainMenu>(gameInstance, MainMenuClass);
+	MainMenuWidget = CreateWidget<UMainMenu>(GameInstance, MainMenuClass);
 	if (MainMenuWidget == nullptr) {
 		UE_LOG(LogShippyMenu, Error, TEXT("MainMenu is _not_ a UMainMenu"));
 		return;
 	}
-	MainMenuWidget->SetInterface(mainMenuInterface);
+	MainMenuWidget->SetInterface(MainMenuInterface);
 
-	InGameMenuWidget = CreateWidget<UInGameMenu>(gameInstance, InGameMenuClass);
+	InGameMenuWidget = CreateWidget<UInGameMenu>(GameInstance, InGameMenuClass);
 	if (InGameMenuWidget == nullptr) {
 		UE_LOG(LogShippyMenu, Error, TEXT("InGameMenu is _not_ a UInGameMenu"));
 		return;
 	}
-	InGameMenuWidget->SetInterface(inGameMenuInterface);
+	InGameMenuWidget->SetInterface(InGameMenuInterface);
 }
 
-void UMenuSystem::MainMenuOpen(APlayerController &playerController)
+void UMenuSystem::MainMenuOpen(APlayerController &PlayerController)
 {
 	UE_LOG(LogShippyMenu, Log, TEXT("MainMenuOpen"));
 
 	MainMenuWidget->AddToViewport();
 	MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
 
-	MouseInputForMenu(playerController);
-	FocusOnWidget(playerController, *MainMenuWidget, FName("HostButton"));
+	MouseInputForMenu(PlayerController);
+	FocusOnWidget(PlayerController, *MainMenuWidget, FName("HostButton"));
 }
 
-void UMenuSystem::MainMenuClose(APlayerController &playerController)
+void UMenuSystem::MainMenuClose(APlayerController &PlayerController)
 {
 	if (MainMenuWidget == nullptr)
 		return;
 	UE_LOG(LogShippyMenu, Log, TEXT("MainMenuClose"));
 
 	MainMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-	MouseInputForGame(playerController);
+	MouseInputForGame(PlayerController);
 }
 
-void UMenuSystem::InGameMenuOpen(APlayerController &playerController)
+void UMenuSystem::InGameMenuOpen(APlayerController &PlayerController)
 {
 	UE_LOG(LogShippyMenu, Log, TEXT("InGameMenuOpen"));
 
 	InGameMenuWidget->AddToViewport();
 	InGameMenuWidget->SetVisibility(ESlateVisibility::Visible);
 
-	MouseInputForMenu(playerController);
-	FocusOnWidget(playerController, *InGameMenuWidget, FName("CancelButton"));
+	MouseInputForMenu(PlayerController);
+	FocusOnWidget(PlayerController, *InGameMenuWidget, FName("CancelButton"));
 }
 
-void UMenuSystem::InGameMenuClose(APlayerController &playerController)
+void UMenuSystem::InGameMenuClose(APlayerController &PlayerController)
 {
 	if (InGameMenuWidget == nullptr)
 		return;
 	UE_LOG(LogShippyMenu, Log, TEXT("InGameMenuClose"));
 
 	InGameMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-	MouseInputForGame(playerController);
+	MouseInputForGame(PlayerController);
 }
 
 void UMenuSystem::SearchClearResults()
@@ -99,31 +99,31 @@ void UMenuSystem::SearchAddServer(const FString& Name, const int SearchIndex)
 	MainMenuWidget->SearchAddServer(Name, SearchIndex);
 }
 
-void UMenuSystem::MouseInputForMenu(APlayerController &playerController)
+void UMenuSystem::MouseInputForMenu(APlayerController &PlayerController)
 {
-	playerController.bShowMouseCursor = true;
+	PlayerController.bShowMouseCursor = true;
 
 	FInputModeUIOnly inputMode;
 	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	playerController.SetInputMode(inputMode);
+	PlayerController.SetInputMode(inputMode);
 }
 
-void UMenuSystem::MouseInputForGame(APlayerController &playerController)
+void UMenuSystem::MouseInputForGame(APlayerController &PlayerController)
 {
-	playerController.bShowMouseCursor = false;
+	PlayerController.bShowMouseCursor = false;
 
 	FInputModeGameOnly inputMode;
-	playerController.SetInputMode(inputMode);
+	PlayerController.SetInputMode(inputMode);
 }
 
-void UMenuSystem::FocusOnWidget(APlayerController &playerController, UUserWidget& menuWidget, const FName& name)
+void UMenuSystem::FocusOnWidget(APlayerController &PlayerController, UUserWidget& MenuWidget, const FName& Name)
 {
-	auto defaultWidget = menuWidget.GetWidgetFromName(name);
-	if (defaultWidget == nullptr) {
-		UE_LOG(LogShippyMenu, Warning, TEXT("UMenuSystem::FocusOnWidget - Widget %s was not found."), *name.ToString())
+	auto DefaultWidget = MenuWidget.GetWidgetFromName(Name);
+	if (DefaultWidget == nullptr) {
+		UE_LOG(LogShippyMenu, Warning, TEXT("UMenuSystem::FocusOnWidget - Widget %s was not found."), *Name.ToString())
 		return;
 	}
 
-	defaultWidget->SetUserFocus(&playerController);
-	defaultWidget->SetKeyboardFocus();
+	DefaultWidget->SetUserFocus(&PlayerController);
+	DefaultWidget->SetKeyboardFocus();
 }
