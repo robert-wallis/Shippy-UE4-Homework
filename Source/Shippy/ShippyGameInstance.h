@@ -4,32 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "OnlineSubsystem.h"
-#include "OnlineSessionSettings.h"
-#include "OnlineSessionInterface.h"
 
 #include "Menu/MainMenuInterface.h"
 #include "Menu/InGameMenuInterface.h"
+#include "LobbySystemInterface.h"
 #include "ShippyGameInstance.generated.h"
 
 /**
- * 
+ * Game Logic
  */
 UCLASS()
 class SHIPPY_API UShippyGameInstance : 
 	public UGameInstance,
 	public MainMenuInterface,
-	public InGameMenuInterface
+	public InGameMenuInterface,
+	public ILobbySystem
 {
 	GENERATED_BODY()
 
 private:
 
-	IOnlineSessionPtr OnlineSession;
-	TSharedPtr<FOnlineSessionSearch> OnlineSessionSearch;
-
 	UPROPERTY()
 	class UMenuSystem *MenuSystem;
+
+	UPROPERTY()
+	class ULobbySystem *LobbySystem;
 
 public:
 
@@ -44,8 +43,6 @@ public:
 	void InGameMenu();
 
 private:
-
-	void InitOnlineSubsystem();
 
 	UFUNCTION()
 	void MainMenuHost() override;
@@ -68,11 +65,9 @@ private:
 	UFUNCTION()
 	void InGameMenuCancel() override;
 
-	void SessionCreate();
-	void SessionRemove(const FName& SessionName);
-	void OnSessionCreated(const FName SessionName, bool Created);
-	void OnSessionFindComplete(bool WasSuccessful);
-	void OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	virtual void LobbySearchComplete(const TArray<FLobbyServer>& Sessions) override;
+	virtual void LobbyHosted(const bool Success) override;
+	virtual void LobbyJoined(const bool Success, const FString& ConnectString) override;
 
 	void ClientMessage(const FString& Message);
 
