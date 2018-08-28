@@ -3,13 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-struct FLobbyServer
-{
-	FString Name;
-	FString UserName;
-	int32 PingInMs;
-};
+#include "LobbyServer.h"
 
 class ILobbySystem
 {

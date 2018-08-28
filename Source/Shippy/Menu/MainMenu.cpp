@@ -69,12 +69,11 @@ void UMainMenu::SearchClearResults()
 	SearchList->ClearChildren();
 }
 
-void UMainMenu::SearchAddServer(const FString& Name, const int SearchIndex)
+void UMainMenu::SearchAddServer(const FLobbyServer& Server, const int SearchIndex)
 {
 	auto Row = CreateWidget<UServerRow>(GetWorld(), ServerRowClass);
-	Row->SetInterface(this);
 	SearchList->AddChild(Row);
-	Row->SetServer(Name, SearchIndex);
+	Row->Init(this, Server, SearchIndex);
 }
 
 void UMainMenu::OnHostClicked()

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "ServerRowInterface.h"
+#include "LobbyServer.h"
 #include "ServerRow.generated.h"
 
 /**
@@ -26,11 +27,13 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerNameText;
 
-	bool Initialize() override;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* HostNameText;
 
-	void SetInterface(ServerRowInterface* Interface);
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* PingText;
 
-	void SetServer(const FString& Name, const int SearchIndex);
+	void Init(ServerRowInterface* Interface, const FLobbyServer& Server, const int SearchIndex);
 
 	UFUNCTION()
 	void OnJoinClicked();

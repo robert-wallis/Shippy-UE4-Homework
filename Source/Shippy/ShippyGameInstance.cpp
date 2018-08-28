@@ -123,10 +123,7 @@ void UShippyGameInstance::LobbySearchComplete(const TArray<FLobbyServer>& Sessio
 	for (int i = 0; i < Sessions.Num(); i++) {
 		auto Server = Sessions[i];
 		UE_LOG(LogShippy, Log, TEXT("Found Session %d: %s"), i, *Server.Name);
-
-		FString Title = FString::Printf(TEXT("%s - %s - %d"), *Server.Name, *Server.UserName, Server.PingInMs);
-
-		MenuSystem->SearchAddServer(Title, i);
+		MenuSystem->SearchAddServer(Server, i);
 	}
 }
 

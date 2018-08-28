@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuInterface.h"
 #include "ServerRowInterface.h"
+#include "../LobbyServer.h"
 #include "MainMenu.generated.h"
 
 /**
@@ -71,7 +72,7 @@ public:
 	void SearchClearResults();
 
 	UFUNCTION()
-	void SearchAddServer(const FString& Name, const int SearchIndex);
+	void SearchAddServer(const FLobbyServer& Name, const int SearchIndex);
 
 private:
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
+#include "LobbyServer.h"
 #include "Menu/MainMenu.h"
 #include "Menu/InGameMenu.h"
 #include "MenuSystem.generated.h"
@@ -47,7 +48,7 @@ public:
 	void SearchClearResults();
 
 	UFUNCTION()
-	void SearchAddServer(const FString& Name, const int SearchIndex);
+	void SearchAddServer(const FLobbyServer& Server, const int SearchIndex);
 
 private:
 
