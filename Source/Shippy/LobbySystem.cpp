@@ -93,6 +93,8 @@ void ULobbySystem::SessionCreate()
 	SessionSettings.NumPublicConnections = 2;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.bUsesPresence = true;
+	auto SessionName = FString(SESSION_NAME);
+	SessionSettings.Set(TEXT("NAME"), SessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, SessionSettings);
 }
 
@@ -125,7 +127,9 @@ void ULobbySystem::OnSessionFindComplete(bool WasSuccessful)
 	auto Results = TArray<FLobbyServer>();
 	for (auto Result : OnlineSessionSearch->SearchResults) {
 		FLobbyServer Server;
-		Server.Name = Result.GetSessionIdStr();
+		Result.Session.SessionSettings.Get(TEXT("NAME"), Server.Name);
+		Server.UserName = Result.Session.OwningUserName;
+		Result.PingInMs = Result.PingInMs;
 		Results.Add(Server);
 	}
 

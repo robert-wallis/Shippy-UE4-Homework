@@ -7,6 +7,8 @@
 struct FLobbyServer
 {
 	FString Name;
+	FString UserName;
+	int32 PingInMs;
 };
 
 class ILobbySystem
