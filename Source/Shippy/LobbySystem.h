@@ -27,6 +27,7 @@ private:
 	TSharedPtr<const FUniqueNetId> PlayerId;
 	IOnlineSessionPtr OnlineSession;
 	TSharedPtr<FOnlineSessionSearch> OnlineSessionSearch;
+	bool IsLanMatch;
 
 public:
 

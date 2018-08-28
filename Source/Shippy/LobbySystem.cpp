@@ -19,13 +19,17 @@ void ULobbySystem::Init(ILobbySystem* Interface)
 		return;
 	}
 
-	UE_LOG(LogShippyLobby, Log, TEXT("OnlineSubsystem: %s"), *Online->GetSubsystemName().ToString());
+	auto OnlineSubsystemName = Online->GetSubsystemName();
+
+	UE_LOG(LogShippyLobby, Log, TEXT("OnlineSubsystem: %s"), *OnlineSubsystemName.ToString());
 
 	OnlineSession = Online->GetSessionInterface();
 	if (!OnlineSession.IsValid()) {
 		UE_LOG(LogShippyLobby, Warning, TEXT("Online Subsystem Interface Invalid :("));
 		return;
 	}
+
+	IsLanMatch = OnlineSubsystemName == "NULL";
 
 	auto IdSystem = Online->GetIdentityInterface();
 	if (!IdSystem.IsValid()) {
@@ -43,7 +47,7 @@ void ULobbySystem::SearchForServers()
 {
 	UE_LOG(LogShippy, Log, TEXT("UShippyGameInstance::MainMenuServerRefresh"));
 	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
-	OnlineSessionSearch->bIsLanQuery = false;
+	OnlineSessionSearch->bIsLanQuery = IsLanMatch;
 	OnlineSessionSearch->MaxSearchResults = 100;
 	OnlineSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	OnlineSession->FindSessions(*PlayerId, OnlineSessionSearch.ToSharedRef());
@@ -81,8 +85,11 @@ void ULobbySystem::SessionCreate()
 	SessionRemove(SESSION_NAME);
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
+
+	auto IsLanMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
+
 	FOnlineSessionSettings SessionSettings;
-	SessionSettings.bIsLANMatch = false;
+	SessionSettings.bIsLANMatch = IsLanMatch;
 	SessionSettings.NumPublicConnections = 2;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.bUsesPresence = true;
