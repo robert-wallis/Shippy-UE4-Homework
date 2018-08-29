@@ -9,9 +9,9 @@
 DEFINE_LOG_CATEGORY(LogShippyLobby);
 #define SESSION_NAME TEXT("Shippying It")
 
-void ULobbySystem::Init(ILobbySystem* Interface)
+void ULobbySystem::Init(ILobbySystem* InterfaceParam)
 {
-	this->Interface = Interface;
+	this->Interface = InterfaceParam;
 
 	auto Online = IOnlineSubsystem::Get();
 	if (Online == nullptr) {

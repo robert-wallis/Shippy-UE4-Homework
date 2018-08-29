@@ -19,9 +19,9 @@ bool UInGameMenu::Initialize()
 	return true;
 }
 
-void UInGameMenu::SetInterface(InGameMenuInterface* Interface)
+void UInGameMenu::SetInterface(InGameMenuInterface* InterfaceParam)
 {
-	this->Interface = Interface;
+	this->Interface = InterfaceParam;
 }
 
 void UInGameMenu::OnExitToMainMenuClicked()

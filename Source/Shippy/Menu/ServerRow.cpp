@@ -6,13 +6,13 @@
 #include "../LogShippy.h"
 
 
-void UServerRow::Init(ServerRowInterface* Interface, const FLobbyServer& Server, const int SearchIndex)
+void UServerRow::Init(ServerRowInterface* InterfaceParam, const FLobbyServer& Server, const int SearchIndexParam)
 {
-	this->Interface = Interface;
+	this->Interface = InterfaceParam;
 	ServerNameText->SetText(FText::FromString(Server.Name));
 	HostNameText->SetText(FText::FromString(Server.UserName));
 	PingText->SetText(FText::FromString(FString::Printf(TEXT("%d ms"), Server.PingInMs)));
-	this->SearchIndex = SearchIndex;
+	this->SearchIndex = SearchIndexParam;
 	JoinButton->OnClicked.AddDynamic(this, &UServerRow::OnJoinClicked);
 }
 

@@ -59,9 +59,9 @@ bool UMainMenu::Initialize()
 	return true;
 }
 
-void UMainMenu::SetInterface(MainMenuInterface * Interface)
+void UMainMenu::SetInterface(MainMenuInterface * InterfaceParam)
 {
-	this->Interface = Interface;
+	this->Interface = InterfaceParam;
 }
 
 void UMainMenu::SearchClearResults()
