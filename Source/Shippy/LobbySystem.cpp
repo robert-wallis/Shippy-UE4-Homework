@@ -86,8 +86,6 @@ void ULobbySystem::SessionCreate()
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
 
-	auto IsLanMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
-
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bIsLANMatch = IsLanMatch;
 	SessionSettings.NumPublicConnections = 2;
