@@ -9,9 +9,9 @@
 DEFINE_LOG_CATEGORY(LogShippyLobby);
 #define SESSION_NAME TEXT("Shippying It")
 
-void ULobbySystem::Init(ILobbySystem* Interface)
+void ULobbySystem::Init(ILobbySystem* InterfaceParam)
 {
-	this->Interface = Interface;
+	this->Interface = InterfaceParam;
 
 	auto Online = IOnlineSubsystem::Get();
 	if (Online == nullptr) {
@@ -85,8 +85,6 @@ void ULobbySystem::SessionCreate()
 	SessionRemove(SESSION_NAME);
 
 	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
-
-	auto IsLanMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
 
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bIsLANMatch = IsLanMatch;
