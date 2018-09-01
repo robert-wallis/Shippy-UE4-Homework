@@ -39,10 +39,10 @@ void UShippyGameInstance::MainMenu()
 	MenuSystem->MainMenuOpen(*PlayerController);
 }
 
-void UShippyGameInstance::MainMenuHost()
+void UShippyGameInstance::MainMenuHost(const FName& SessionName)
 {
 	ClientMessage("Hosting Game");
-	LobbySystem->HostServer();
+	LobbySystem->HostServer(SessionName);
 }
 
 void UShippyGameInstance::MainMenuJoinGame(const FString& Address)

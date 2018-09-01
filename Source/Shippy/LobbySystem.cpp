@@ -7,11 +7,11 @@
 #include "LogShippy.h"
 
 DEFINE_LOG_CATEGORY(LogShippyLobby);
-#define SESSION_NAME TEXT("Shippying It")
 
 void ULobbySystem::Init(ILobbySystem* InterfaceParam)
 {
 	this->Interface = InterfaceParam;
+	this->CurrentGameName = TEXT("");
 
 	auto Online = IOnlineSubsystem::Get();
 	if (Online == nullptr) {
@@ -53,9 +53,9 @@ void ULobbySystem::SearchForServers()
 	OnlineSession->FindSessions(*PlayerId, OnlineSessionSearch.ToSharedRef());
 }
 
-void ULobbySystem::HostServer()
+void ULobbySystem::HostServer(const FName& SessionName)
 {
-	SessionCreate();
+	SessionCreate(SessionName);
 }
 
 void ULobbySystem::JoinServer(const int ServerIndex)
@@ -69,31 +69,31 @@ void ULobbySystem::JoinServer(const int ServerIndex)
 		return;
 	}
 	auto SessionSearchResult = OnlineSessionSearch->SearchResults[ServerIndex];
-	OnlineSession->JoinSession(*PlayerId, SESSION_NAME, SessionSearchResult);
+	OnlineSession->JoinSession(*PlayerId, "", SessionSearchResult);
 }
 
 void ULobbySystem::QuitServer()
 {
-	SessionRemove(SESSION_NAME);
+	SessionRemove(CurrentGameName);
 }
 
-void ULobbySystem::SessionCreate()
+void ULobbySystem::SessionCreate(const FName& SessionName)
 {
 	if (!OnlineSession.IsValid())
 		return;
 
-	SessionRemove(SESSION_NAME);
+	SessionRemove(CurrentGameName);
 
-	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), SESSION_NAME);
+	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), *SessionName.ToString());
 
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bIsLANMatch = IsLanMatch;
 	SessionSettings.NumPublicConnections = 2;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.bUsesPresence = true;
-	auto SessionName = FString(SESSION_NAME);
-	SessionSettings.Set(TEXT("NAME"), SessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, SessionSettings);
+	FString StringSessionName = FString(*SessionName.ToString());
+	SessionSettings.Set(TEXT("NAME"), StringSessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	OnlineSession->CreateSession(*PlayerId, *SessionName.ToString(), SessionSettings);
 }
 
 void ULobbySystem::SessionRemove(const FName& SessionName)
@@ -112,6 +112,7 @@ void ULobbySystem::SessionRemove(const FName& SessionName)
 void ULobbySystem::OnSessionCreated(const FName SessionName, bool Created)
 {
 	UE_LOG(LogShippyLobby, Log, TEXT("Session Created: %d, %s"), Created, *SessionName.ToString());
+	CurrentGameName = SessionName;
 	Interface->LobbyHosted(Created);
 }
 

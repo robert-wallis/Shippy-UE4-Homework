@@ -11,7 +11,7 @@ class SHIPPY_API MainMenuInterface
 {
 public:
 	
-	virtual void MainMenuHost() = 0;
+	virtual void MainMenuHost(const FName &SessionName) = 0;
 	virtual void MainMenuJoinGame(const FString &Address) = 0;
 	virtual void MainMenuJoinServer(const int SearchIndex) = 0;
 	virtual void MainMenuQuit() = 0;

@@ -23,11 +23,32 @@ class SHIPPY_API UMainMenu : public UUserWidget, public ServerRowInterface
 
 public:
 
+	UPROPERTY(meta = ( BindWidget ))
+	class UWidgetSwitcher* Switcher;
+
+	UPROPERTY(meta = ( BindWidget ))
+	class UWidget* MainMenu;
+
 	UPROPERTY(meta = (BindWidget))
+	class UButton* HostMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* HostMenu;
+
+	UPROPERTY(meta = ( BindWidget ))
+	class UEditableTextBox* HostServerName;
+
+	UPROPERTY(meta = ( BindWidget ))
 	class UButton* HostButton;
+
+	UPROPERTY(meta = ( BindWidget ))
+	class UButton* HostBackButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SearchButton;
+
+	UPROPERTY(meta = ( BindWidget ))
+	class UWidget* SearchMenu;
 
 	UPROPERTY(meta = (BindWidget))
 	class UPanelWidget* SearchList;
@@ -44,23 +65,14 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* CreditsButton;
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* QuitButton;
+	UPROPERTY(meta = ( BindWidget ))
+	class UWidget* CreditsMenu;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = ( BindWidget ))
 	class UButton* CreditsBackButton;
 
 	UPROPERTY(meta = (BindWidget))
-	class UWidgetSwitcher* Switcher;
-
-	UPROPERTY(meta = (BindWidget))
-	class UWidget* MainMenu;
-
-	UPROPERTY(meta = (BindWidget))
-	class UWidget* SearchMenu;
-
-	UPROPERTY(meta = (BindWidget))
-	class UWidget* CreditsMenu;
+	class UButton* QuitButton;
 
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 
@@ -77,6 +89,12 @@ public:
 private:
 
 	UFUNCTION()
+	void OnBackToMainMenu();
+
+	UFUNCTION()
+	void OnHostMenuClicked();
+
+	UFUNCTION()
 	void OnHostClicked();
 
 	UFUNCTION()
@@ -86,19 +104,15 @@ private:
 	void OnSearchBackClicked();
 
 	UFUNCTION()
+	void ServerRowJoin(const int SearchIndex) override;
+
+	UFUNCTION()
 	void OnJoinClicked();
-
-	UFUNCTION()
-	void OnQuitClicked();
-
-	UFUNCTION()
-	void OnBackToMainMenu();
 
 	UFUNCTION()
 	void OnCreditsClicked();
 
 	UFUNCTION()
-	void ServerRowJoin(const int SearchIndex) override;
-
+	void OnQuitClicked();
 };
 

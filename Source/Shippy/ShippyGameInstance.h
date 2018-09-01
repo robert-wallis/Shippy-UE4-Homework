@@ -45,7 +45,7 @@ public:
 private:
 
 	UFUNCTION()
-	void MainMenuHost() override;
+	void MainMenuHost(const FName& SessionName) override;
 
 	UFUNCTION()
 	void MainMenuJoinGame(const FString& Address) override;

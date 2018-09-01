@@ -27,19 +27,20 @@ private:
 	TSharedPtr<const FUniqueNetId> PlayerId;
 	IOnlineSessionPtr OnlineSession;
 	TSharedPtr<FOnlineSessionSearch> OnlineSessionSearch;
+	FName CurrentGameName;
 	bool IsLanMatch;
 
 public:
 
 	void Init(ILobbySystem* Interface);
 	void SearchForServers();
-	void HostServer();
+	void HostServer(const FName& SessionName);
 	void JoinServer(const int ServerIndex);
 	void QuitServer();
 	
 private:
 
-	void SessionCreate();
+	void SessionCreate(const FName& SessionName);
 	void SessionRemove(const FName& SessionName);
 
 	void OnSessionCreated(const FName SessionName, bool Created);
