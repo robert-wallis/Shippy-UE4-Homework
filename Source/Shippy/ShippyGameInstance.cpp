@@ -138,7 +138,7 @@ void UShippyGameInstance::LobbyHosted(const bool Success)
 		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::OnSessionCreated PlayerController null, cant close menu"));
 		return;
 	}
-	if (!GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen")) {
+	if (!GetWorld()->ServerTravel("/Game/Platform/Maps/Lobby?listen")) {
 		ClientMessage(TEXT("Error Joining Server"));
 		return;
 	}

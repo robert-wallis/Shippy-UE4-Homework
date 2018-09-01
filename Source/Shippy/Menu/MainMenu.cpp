@@ -90,11 +90,13 @@ void UMainMenu::SearchAddServer(const FLobbyServer& Server, const int SearchInde
 void UMainMenu::OnBackToMainMenu()
 {
 	Switcher->SetActiveWidget(MainMenu);
+	HostMenuButton->SetKeyboardFocus();
 }
 
 void UMainMenu::OnHostMenuClicked()
 {
 	Switcher->SetActiveWidget(HostMenu);
+	HostServerName->SetKeyboardFocus();
 }
 
 void UMainMenu::OnHostClicked()
@@ -110,6 +112,7 @@ void UMainMenu::OnHostClicked()
 		return;
 	}
 
+	OnBackToMainMenu();
 	Interface->MainMenuHost(*ServerName);
 }
 
