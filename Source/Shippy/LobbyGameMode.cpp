@@ -6,6 +6,7 @@
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
+	Super::PostLogin(NewPlayer);
 	PlayerCount++;
 
 	if (PlayerCount >= 2) {
@@ -15,5 +16,6 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 
 void ALobbyGameMode::Logout(AController* Exiting)
 {
+	Super::Logout(Exiting);
 	PlayerCount--;
 }
