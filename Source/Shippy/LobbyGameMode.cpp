@@ -10,7 +10,8 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	PlayerCount++;
 
 	if (PlayerCount >= 2) {
-		UE_LOG(LogShippy, Warning, TEXT("TODO: goto real match"));
+		bUseSeamlessTravel = true;
+		GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 	}
 }
 
