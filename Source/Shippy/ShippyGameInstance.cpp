@@ -86,6 +86,11 @@ void UShippyGameInstance::InGameMenu()
 	MenuSystem->InGameMenuOpen(*PlayerController);
 }
 
+void UShippyGameInstance::StartSession()
+{
+	LobbySystem->StartSession();
+}
+
 bool UShippyGameInstance::IsSeamlessTravelSupported()
 {
 	if (LobbySystem == nullptr) {

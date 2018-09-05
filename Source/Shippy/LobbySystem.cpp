@@ -73,7 +73,12 @@ void ULobbySystem::JoinServer(const int ServerIndex)
 		return;
 	}
 	auto SessionSearchResult = OnlineSessionSearch->SearchResults[ServerIndex];
-	OnlineSession->JoinSession(*PlayerId, "Game", SessionSearchResult);
+	OnlineSession->JoinSession(*PlayerId, SESSION_NAME, SessionSearchResult);
+}
+
+void ULobbySystem::StartSession()
+{
+	OnlineSession->StartSession(SESSION_NAME);
 }
 
 void ULobbySystem::QuitServer()

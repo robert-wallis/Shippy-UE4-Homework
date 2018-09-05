@@ -2,6 +2,7 @@
 
 #include "ShippyGameMode.h"
 #include "ShippyCharacter.h"
+#include "TimerManager.h"
 #include "Engine/World.h"
 #include "ShippyGameInstance.h"
 #include "UObject/ConstructorHelpers.h"
@@ -24,6 +25,10 @@ void AShippyGameMode::CountDownToTravel()
 void AShippyGameMode::TravelToPuzzle()
 {
 	SetupSeamlessTravel();
+	auto ShippyGameInstance = Cast<UShippyGameInstance>(GetGameInstance());
+	if (ShippyGameInstance != nullptr) {
+		ShippyGameInstance->StartSession();
+	}
 	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
 }
 

@@ -43,6 +43,9 @@ public:
 	void InGameMenu();
 
 	UFUNCTION()
+	void StartSession();
+
+	UFUNCTION()
 	bool IsSeamlessTravelSupported();
 
 private:

@@ -38,6 +38,7 @@ public:
 	void SearchForServers();
 	void HostServer(const FName& SessionName);
 	void JoinServer(const int ServerIndex);
+	void StartSession();
 	void QuitServer();
 	
 private:
