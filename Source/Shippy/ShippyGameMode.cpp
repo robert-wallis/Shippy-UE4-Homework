@@ -19,7 +19,7 @@ AShippyGameMode::AShippyGameMode()
 
 void AShippyGameMode::CountDownToTravel()
 {
-	GetWorld()->GetTimerManager().SetTimer(TravelTimer, this, &AShippyGameMode::TravelToPuzzle, 3.0f, false, 0.f);
+	GetWorldTimerManager().SetTimer(TravelTimer, this, &AShippyGameMode::TravelToPuzzle, 3.0f);
 }
 
 void AShippyGameMode::TravelToPuzzle()
