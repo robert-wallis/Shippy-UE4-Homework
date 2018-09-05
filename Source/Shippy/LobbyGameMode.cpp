@@ -1,7 +1,8 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved.
 
 #include "LobbyGameMode.h"
-#include "Engine/World.h"
+
+#include "ShippyGameInstance.h"
 #include "LogShippy.h"
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
@@ -10,8 +11,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	PlayerCount++;
 
 	if (PlayerCount >= 2) {
-		bUseSeamlessTravel = true;
-		GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
+		CountDownToTravel();
 	}
 }
 

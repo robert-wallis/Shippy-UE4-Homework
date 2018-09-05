@@ -32,6 +32,7 @@ void ULobbySystem::Init(ILobbySystem* InterfaceParam)
 	}
 
 	IsLanMatch = OnlineSubsystemName == "NULL";
+	UseSeamlessTravel = OnlineSubsystemName != "NULL";
 
 	auto IdSystem = Online->GetIdentityInterface();
 	if (!IdSystem.IsValid()) {

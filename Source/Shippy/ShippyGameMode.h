@@ -13,4 +13,18 @@ class AShippyGameMode : public AGameModeBase
 
 public:
 	AShippyGameMode();
+
+	UFUNCTION()
+	void CountDownToTravel();
+
+	UFUNCTION()
+	void TravelToPuzzle();
+
+	UFUNCTION()
+	void TravelToLobby();
+
+private:
+
+	void SetupSeamlessTravel();
+
 };

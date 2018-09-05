@@ -32,6 +32,8 @@ private:
 
 public:
 
+	bool UseSeamlessTravel;
+
 	void Init(ILobbySystem* Interface);
 	void SearchForServers();
 	void HostServer(const FName& SessionName);

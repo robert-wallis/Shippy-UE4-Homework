@@ -42,6 +42,9 @@ public:
 	UFUNCTION()
 	void InGameMenu();
 
+	UFUNCTION()
+	bool IsSeamlessTravelSupported();
+
 private:
 
 	UFUNCTION()

@@ -14,6 +14,7 @@
 
 #include "Menu/MenuSystem.h"
 #include "LobbySystem.h"
+#include "ShippyGameMode.h"
 #include "LogShippy.h"
 
 
@@ -85,6 +86,13 @@ void UShippyGameInstance::InGameMenu()
 	MenuSystem->InGameMenuOpen(*PlayerController);
 }
 
+bool UShippyGameInstance::IsSeamlessTravelSupported()
+{
+	if (LobbySystem == nullptr) {
+		return false;
+	}
+	return LobbySystem->UseSeamlessTravel;
+}
 
 void UShippyGameInstance::InGameMenuExitToMainMenu()
 {
@@ -133,13 +141,22 @@ void UShippyGameInstance::LobbyHosted(const bool Success)
 		MainMenu();
 		return;
 	}
-	auto PlayerController = GetFirstLocalPlayerController();
-	if (PlayerController == nullptr) {
-		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::OnSessionCreated PlayerController null, cant close menu"));
+
+	auto GameMode = GetWorld()->GetAuthGameMode();
+	if (GameMode == nullptr)
+		return;
+
+	auto ShippyGameMode = Cast<AShippyGameMode>(GameMode);
+	if (ShippyGameMode == nullptr) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::LobbyHosted current game mode is not An AShippyGameMode, so we can't travel to lobby"));
 		return;
 	}
-	if (!GetWorld()->ServerTravel("/Game/Platform/Maps/Lobby?listen")) {
-		ClientMessage(TEXT("Error Joining Server"));
+
+	ShippyGameMode->TravelToLobby();
+
+	auto PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController == nullptr) {
+		UE_LOG(LogShippy, Error, TEXT("UShippyGameInstance::LobbyHosted PlayerController null, cant close menu"));
 		return;
 	}
 	MenuSystem->MainMenuClose(*PlayerController);

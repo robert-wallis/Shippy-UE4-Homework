@@ -2,6 +2,8 @@
 
 #include "ShippyGameMode.h"
 #include "ShippyCharacter.h"
+#include "Engine/World.h"
+#include "ShippyGameInstance.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShippyGameMode::AShippyGameMode()
@@ -11,5 +13,30 @@ AShippyGameMode::AShippyGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+}
+
+void AShippyGameMode::CountDownToTravel()
+{
+	TravelToPuzzle();
+}
+
+void AShippyGameMode::TravelToPuzzle()
+{
+	SetupSeamlessTravel();
+	GetWorld()->ServerTravel("/Game/Platform/Maps/PuzzleRoom?listen");
+}
+
+void AShippyGameMode::TravelToLobby()
+{
+	SetupSeamlessTravel();
+	GetWorld()->ServerTravel("/Game/Platform/Maps/Lobby?listen");
+}
+
+void AShippyGameMode::SetupSeamlessTravel()
+{
+	auto ShippyGameInstance = Cast<UShippyGameInstance>(GetGameInstance());
+	if (ShippyGameInstance != nullptr) {
+		bUseSeamlessTravel = ShippyGameInstance->IsSeamlessTravelSupported();
 	}
 }
