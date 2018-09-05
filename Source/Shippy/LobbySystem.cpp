@@ -6,6 +6,8 @@
 
 #include "LogShippy.h"
 
+#define SESSION_NAME TEXT("Game")
+
 DEFINE_LOG_CATEGORY(LogShippyLobby);
 
 void ULobbySystem::Init(ILobbySystem* InterfaceParam)
@@ -55,7 +57,8 @@ void ULobbySystem::SearchForServers()
 
 void ULobbySystem::HostServer(const FName& SessionName)
 {
-	SessionCreate(SessionName);
+	CurrentGameName = SessionName;
+	SessionCreate(SESSION_NAME);
 }
 
 void ULobbySystem::JoinServer(const int ServerIndex)
@@ -69,12 +72,12 @@ void ULobbySystem::JoinServer(const int ServerIndex)
 		return;
 	}
 	auto SessionSearchResult = OnlineSessionSearch->SearchResults[ServerIndex];
-	OnlineSession->JoinSession(*PlayerId, "", SessionSearchResult);
+	OnlineSession->JoinSession(*PlayerId, "Game", SessionSearchResult);
 }
 
 void ULobbySystem::QuitServer()
 {
-	SessionRemove(CurrentGameName);
+	SessionRemove(SESSION_NAME);
 }
 
 void ULobbySystem::SessionCreate(const FName& SessionName)
@@ -82,18 +85,18 @@ void ULobbySystem::SessionCreate(const FName& SessionName)
 	if (!OnlineSession.IsValid())
 		return;
 
-	SessionRemove(CurrentGameName);
+	SessionRemove(SESSION_NAME);
 
-	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), *SessionName.ToString());
+	UE_LOG(LogShippy, Log, TEXT("Creating Session: %s"), *CurrentGameName.ToString());
 
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bIsLANMatch = IsLanMatch;
 	SessionSettings.NumPublicConnections = 2;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.bUsesPresence = true;
-	FString StringSessionName = FString(*SessionName.ToString());
+	FString StringSessionName = FString(*CurrentGameName.ToString());
 	SessionSettings.Set(TEXT("NAME"), StringSessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	OnlineSession->CreateSession(*PlayerId, *SessionName.ToString(), SessionSettings);
+	OnlineSession->CreateSession(*PlayerId, SESSION_NAME, SessionSettings);
 }
 
 void ULobbySystem::SessionRemove(const FName& SessionName)
@@ -103,7 +106,7 @@ void ULobbySystem::SessionRemove(const FName& SessionName)
 
 	auto NamedSession = OnlineSession->GetNamedSession(SessionName);
 	if (NamedSession != nullptr) {
-		UE_LOG(LogShippy, Log, TEXT("Closing existing session: %s"), *SessionName.ToString());
+		UE_LOG(LogShippy, Log, TEXT("Closing existing session: %s"), *CurrentGameName.ToString());
 		OnlineSession->RemoveNamedSession(SessionName);
 		OnlineSession->DestroySession(SessionName);
 	}
@@ -111,8 +114,7 @@ void ULobbySystem::SessionRemove(const FName& SessionName)
 
 void ULobbySystem::OnSessionCreated(const FName SessionName, bool Created)
 {
-	UE_LOG(LogShippyLobby, Log, TEXT("Session Created: %d, %s"), Created, *SessionName.ToString());
-	CurrentGameName = SessionName;
+	UE_LOG(LogShippyLobby, Log, TEXT("Session Created: %d, %s"), Created, *CurrentGameName.ToString());
 	Interface->LobbyHosted(Created);
 }
 
@@ -138,13 +140,13 @@ void ULobbySystem::OnSessionFindComplete(bool WasSuccessful)
 void ULobbySystem::OnSessionJoinComplete(const FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	if (Result != EOnJoinSessionCompleteResult::Success) {
-		UE_LOG(LogShippyLobby, Error, TEXT("Couldn't join %s: EOnJoinSessionCompleteResult#%d"), *SessionName.ToString(), Result);
+		UE_LOG(LogShippyLobby, Error, TEXT("Couldn't join %s: EOnJoinSessionCompleteResult#%d"), *CurrentGameName.ToString(), Result);
 		return;
 	}
 
 	FString ConnectString;
 	if (!OnlineSession->GetResolvedConnectString(SessionName, ConnectString)) {
-		UE_LOG(LogShippyLobby, Error, TEXT("OnSessionJoinComplete Couldn't resolve connect string %s"), *SessionName.ToString());
+		UE_LOG(LogShippyLobby, Error, TEXT("OnSessionJoinComplete Couldn't resolve connect string for %s"), *CurrentGameName.ToString());
 		return;
 	}
 
