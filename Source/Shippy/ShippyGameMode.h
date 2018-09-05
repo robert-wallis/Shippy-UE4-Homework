@@ -11,6 +11,8 @@ class AShippyGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+	FTimerHandle TravelTimer;
+
 public:
 	AShippyGameMode();
 
